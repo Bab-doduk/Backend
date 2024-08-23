@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: Bob-doduk
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update                                  # Hibernate? DDL ?? ???? ?? (create, update, validate, none ? ??)
+      dialect: org.hibernate.dialect.PostgreSQLDialect  # PostgreSQL Dialect ?? ??
+    show-sql: true                                      # SQL ??? ??? ?? (??? ??)
+
+  sql:
+    init:
+      mode: always                                      # ?????? ?? ? SQL ????? ?? ??
