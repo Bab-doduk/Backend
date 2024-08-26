@@ -1,4 +1,4 @@
-package com.sparta.bobdoduk.dto;
+package com.sparta.bobdoduk.global.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
