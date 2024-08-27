@@ -4,12 +4,14 @@ import com.sparta.bobdoduk.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
 @Getter
 @Entity
 @Table(name = "p_food_categories")
+@NoArgsConstructor
 public class FoodCategory extends BaseEntity {
     @Id
     @GeneratedValue

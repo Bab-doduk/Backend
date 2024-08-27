@@ -5,11 +5,14 @@ import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.util.UUID;
 
 @Getter
 @Entity
 @Table(name = "p_area_categories")
+@NoArgsConstructor
 public class AreaCategory extends BaseEntity {
     @Id
     @GeneratedValue
