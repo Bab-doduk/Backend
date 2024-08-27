@@ -1,9 +1,7 @@
 package com.sparta.bobdoduk.auth;
 
 import com.sparta.bobdoduk.Auditing;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,12 +18,21 @@ import java.util.UUID;
 public class User extends Auditing {
     @Id
     private UUID id;
+    @Column(nullable = false)
     private String username;
+    @Column(nullable = false)
     private String nickname;
+    @Column(nullable = false)
     private String email;
+    @Column(nullable = false)
     private String password;
-    private String role;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserRoleEnum role;
+    @Column(nullable = false)
     private String phone_number;
+    @Column(nullable = false)
     private String address_1;
+    @Column(nullable = false)
     private String address_2;
 }

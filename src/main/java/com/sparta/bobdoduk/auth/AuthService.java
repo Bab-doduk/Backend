@@ -15,24 +15,32 @@ public class AuthService {
     private final AuthRepository authRepository;
 
     @Transactional
-    public SignupResponseDto signup(SignupRequestDto signupRequestDto) {
-        log.info(signupRequestDto.getAddress_1());
+    public SignupResponseDto signup(SignupRequestDto requestDto) {
+
+        UserRoleEnum userRole = switch (requestDto.getRole()) {
+            case "OWNER" -> UserRoleEnum.OWNER;
+            case "MANAGER" -> UserRoleEnum.MANAGER;
+            case "MASTER" -> UserRoleEnum.MASTER;
+            default -> UserRoleEnum.CUSTOMER;
+        };
+
+
         User user = User.builder()
                 .id(UUID.randomUUID())
-                .username(signupRequestDto.getUsername())
-                .nickname(signupRequestDto.getNickname())
-                .email(signupRequestDto.getEmail())
-                .password(signupRequestDto.getPassword())
-                .role(signupRequestDto.getRole())
-                .phone_number(signupRequestDto.getPhone_number())
-                .address_1(signupRequestDto.getAddress_1())
-                .address_2(signupRequestDto.getAddress_2()).build();
+                .username(requestDto.getUsername())
+                .nickname(requestDto.getNickname())
+                .email(requestDto.getEmail())
+                .password(requestDto.getPassword())
+                .role(userRole)
+                .phone_number(requestDto.getPhone_number())
+                .address_1(requestDto.getAddress_1())
+                .address_2(requestDto.getAddress_2()).build();
 
         authRepository.save(user);
         return SignupResponseDto.builder()
                 .id(user.getId())
                 .nickname(user.getNickname())
-                .role(user.getRole())
+                .role(user.getRole().toString())
                 .build();
     }
 }

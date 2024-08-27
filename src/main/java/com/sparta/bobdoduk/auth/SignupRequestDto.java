@@ -18,7 +18,7 @@ public class SignupRequestDto {
     private String nickname;
     @Email
     private String email;
-    @Pattern(regexp = "^[^\s]{8,15}$")
+    @Pattern(regexp = "^[^ ]{8,15}$")
     private String password;
     @NotNull
     private String role;
