@@ -2,7 +2,9 @@ package com.sparta.bobdoduk.global.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -16,13 +18,15 @@ public abstract class BaseEntity {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "created_by", nullable = false, updatable = false)
+    @CreatedBy
+    @Column(name = "created_by")
     private String createdBy;
 
     @LastModifiedDate
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @LastModifiedBy
     @Column(name = "updated_by")
     private String updatedBy;
 
@@ -41,4 +45,5 @@ public abstract class BaseEntity {
     public void preUpdate() {
         updatedAt = LocalDateTime.now();
     }
+
 }

@@ -13,7 +13,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @Table(name = "p_stores")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Store extends BaseEntity {
+public class Store {
 
     @Id
     @GeneratedValue
@@ -53,4 +53,14 @@ public class Store extends BaseEntity {
         this.phoneNumber = phoneNumber;
         this.ownerId = ownerId;
     }
+
+    public void update(String name, FoodCategory foodCategory, AreaCategory areaCategory, String description, String address, String phoneNumber) {
+        this.name = name;
+        this.foodCategory = foodCategory;
+        this.areaCategory = areaCategory;
+        this.description = description;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+    }
+
 }
