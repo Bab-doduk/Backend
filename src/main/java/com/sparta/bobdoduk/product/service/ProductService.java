@@ -3,9 +3,14 @@ package com.sparta.bobdoduk.product.service;
 import com.sparta.bobdoduk.product.domain.Product;
 import com.sparta.bobdoduk.product.dto.ProductRequestDTO;
 import com.sparta.bobdoduk.product.dto.ProductResponseDTO;
+import com.sparta.bobdoduk.product.dto.ProductSearchRequestDTO;
 import com.sparta.bobdoduk.product.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -73,10 +78,33 @@ public class ProductService {
         productRepository.deleteById(productId);
     }
 
-//    @Transactional
-//    public List<ProductResponseDTO> searchProduct(ProductSearchRequestDTO searchDTO) {
-//        return ProductResponseDTO.fromEntity();
-//    }
+    // 상품 검색
+    @Transactional
+    public Page<ProductResponseDTO> searchProduct(ProductSearchRequestDTO searchRequestDTO) {
+
+        // 기본설정
+        Sort.Direction direction = Sort.Direction.DESC;
+        String sortBy = "createdAt";
+
+
+        // ASC 정렬
+        if (searchRequestDTO.getOrderBy().equals("ASC")) {
+            direction = Sort.Direction.ASC;
+        }
+
+
+        // 수정일자 설정
+        if (searchRequestDTO.getSortBy().equals("updatedAt")) {
+            sortBy = "updatedAt";
+        }
+
+
+        Pageable pageable = PageRequest.of(searchRequestDTO.getPage(), searchRequestDTO.getPageSize(),Sort.by(direction, sortBy));
+
+
+        return productRepository.searchProducts(searchRequestDTO.getQuery(), pageable)
+                .map(ProductResponseDTO::fromEntity);
+    }
 
 
     // 상품 아이디로 상품 찾는 로직

@@ -1,5 +1,6 @@
 package com.sparta.bobdoduk.product.domain;
 
+import com.sparta.bobdoduk.global.entity.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -14,7 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Product {
+public class Product extends BaseEntity {
 
     @Id
     private UUID id;

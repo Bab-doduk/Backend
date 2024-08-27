@@ -4,6 +4,7 @@ import com.sparta.bobdoduk.product.domain.Product;
 import com.sparta.bobdoduk.product.domain.ProductStatus;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductResponseDTO {
+public class ProductResponseDTO implements Serializable {
 
     private UUID id;
 

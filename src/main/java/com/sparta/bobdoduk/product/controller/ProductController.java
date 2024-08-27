@@ -1,10 +1,13 @@
 package com.sparta.bobdoduk.product.controller;
 
 import com.sparta.bobdoduk.product.dto.ProductRequestDTO;
+import com.sparta.bobdoduk.product.dto.ProductResponseDTO;
 import com.sparta.bobdoduk.product.dto.ProductSearchRequestDTO;
 import com.sparta.bobdoduk.product.service.ProductService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,9 +57,9 @@ public class ProductController {
         return ResponseEntity.ok().body(null);
     }
 
-//    @GetMapping("/search")
-//    public ResponseEntity<?> searchProduct(@RequestBody ProductSearchRequestDTO searchRequestDTO) {
-//        return ResponseEntity.ok().body(productService.searchProduct(searchRequestDTO));
-//    }
+    @GetMapping("/search")
+    public ResponseEntity<Page<ProductResponseDTO>> searchProduct(@RequestBody @Valid ProductSearchRequestDTO searchRequestDTO) {
+        return ResponseEntity.ok().body(productService.searchProduct(searchRequestDTO));
+    }
 
 }
