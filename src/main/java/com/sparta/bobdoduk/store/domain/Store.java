@@ -4,6 +4,7 @@ import com.sparta.bobdoduk.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import java.util.UUID;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -41,4 +42,15 @@ public class Store extends BaseEntity {
 
     @Column(name = "owner_id", nullable = false)
     private UUID ownerId;
+
+    @Builder
+    public Store(String name, FoodCategory foodCategory, AreaCategory areaCategory, String description, String address, String phoneNumber, UUID ownerId) {
+        this.name = name;
+        this.foodCategory = foodCategory;
+        this.areaCategory = areaCategory;
+        this.description = description;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.ownerId = ownerId;
+    }
 }

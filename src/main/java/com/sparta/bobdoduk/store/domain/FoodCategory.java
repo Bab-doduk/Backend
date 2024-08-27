@@ -2,6 +2,7 @@ package com.sparta.bobdoduk.store.domain;
 
 import com.sparta.bobdoduk.global.entity.BaseEntity;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.util.UUID;
@@ -17,4 +18,9 @@ public class FoodCategory extends BaseEntity {
 
     @Column(name = "name", length = 50, nullable = false)
     private String name;
+
+    @Builder
+    public FoodCategory(String name) {
+        this.name = name;
+    }
 }
