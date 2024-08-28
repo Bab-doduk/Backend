@@ -2,6 +2,7 @@ package com.sparta.bobdoduk.auth;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +14,7 @@ import java.util.UUID;
 public class AuthService {
 
     private final AuthRepository authRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public SignupResponseDto signup(SignupRequestDto requestDto) {
@@ -24,13 +26,14 @@ public class AuthService {
             default -> UserRoleEnum.CUSTOMER;
         };
 
+        String password = passwordEncoder.encode(requestDto.getPassword());
 
         User user = User.builder()
                 .id(UUID.randomUUID())
                 .username(requestDto.getUsername())
                 .nickname(requestDto.getNickname())
                 .email(requestDto.getEmail())
-                .password(requestDto.getPassword())
+                .password(password)
                 .role(userRole)
                 .phone_number(requestDto.getPhone_number())
                 .address_1(requestDto.getAddress_1())
@@ -43,4 +46,5 @@ public class AuthService {
                 .role(user.getRole().toString())
                 .build();
     }
+
 }

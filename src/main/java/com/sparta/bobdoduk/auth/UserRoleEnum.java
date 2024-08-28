@@ -1,5 +1,8 @@
 package com.sparta.bobdoduk.auth;
 
+import lombok.Getter;
+
+@Getter
 public enum UserRoleEnum {
     CUSTOMER(Authority.CUSTOMER),
     OWNER(Authority.OWNER),
