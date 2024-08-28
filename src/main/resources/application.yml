@@ -5,15 +5,16 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
-    password: postgres
+    password: 1225
     driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
-      ddl-auto: update                                  # Hibernate? DDL ?? ???? ?? (create, update, validate, none ? ??)
-      dialect: org.hibernate.dialect.PostgreSQLDialect  # PostgreSQL Dialect ?? ??
-    show-sql: true                                      # SQL ??? ??? ?? (??? ??)
+      ddl-auto: update                                  # Hibernate의 DDL 자동 설정 (create, update, validate, none)
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect  # PostgreSQL Dialect 설정
+    show-sql: true                                      # SQL 쿼리 로그 출력
 
   sql:
     init:
-      mode: always                                      # ?????? ?? ? SQL ????? ?? ??
+      mode: always                                      # SQL 초기화 스크립트 실행 모드
