@@ -1,9 +1,14 @@
 package com.sparta.bobdoduk.product.service;
 
+import com.sparta.bobdoduk.product.domain.Option;
 import com.sparta.bobdoduk.product.domain.Product;
+import com.sparta.bobdoduk.product.domain.ProductOption;
+import com.sparta.bobdoduk.product.dto.ProductOptionRequestDTO;
 import com.sparta.bobdoduk.product.dto.ProductRequestDTO;
 import com.sparta.bobdoduk.product.dto.ProductResponseDTO;
 import com.sparta.bobdoduk.product.dto.ProductSearchRequestDTO;
+import com.sparta.bobdoduk.product.repository.OptionRepository;
+import com.sparta.bobdoduk.product.repository.ProductOptionRepository;
 import com.sparta.bobdoduk.product.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -21,6 +27,9 @@ import java.util.UUID;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final OptionRepository optionRepository;
+    private final OptionService optionService;
+    private final ProductOptionRepository productOptionRepository;
 
     // 상품 생성
     @Transactional
@@ -106,6 +115,54 @@ public class ProductService {
                 .map(ProductResponseDTO::fromEntity);
     }
 
+    // 상품옵션 등록 (하나의 상품에 옵션 여러개 등록)
+    @Transactional
+    public void createProductOption(UUID productId, ProductOptionRequestDTO requestDTO) {
+        // 주어진 productId로 Product 객체를 찾는다.
+        Product product = findByProductId(productId);
+
+        // 요청 DTO에서 옵션 ID 목록을 가져온다.
+        List<UUID> optionIdList = requestDTO.getOptionIdList();
+
+        // 옵션 ID 목록을 반복하여 각각의 옵션을 ProductOption으로 생성
+        for (UUID optionId : optionIdList) {
+
+            // 고유한 ID를 생성하여 새로운 ProductOption을 위한 UUID를 만든다.
+            UUID productOption_id = UUID.randomUUID();
+
+            // 옵션 ID로 Option 객체를 찾는다.
+            Option option = optionService.findByOptionId(optionId);
+
+            // Product와 Option을 연결하여 새로운 ProductOption 객체를 생성한다.
+            ProductOption productOption = ProductOption.builder()
+                    .id(productOption_id)  // 생성한 UUID를 ProductOption의 ID로 설정
+                    .product(product)      // 주어진 Product 객체를 설정
+                    .option(option)        // 주어진 Option 객체를 설정
+                    .build();              // ProductOption 객체를 빌드하여 생성
+
+            // 생성한 ProductOption 객체를 데이터베이스에 저장한다.
+            productOptionRepository.save(productOption);
+        }
+    }
+
+    // 상품옵션 삭제 (하나의 상품에 옵션 여러개 삭제)
+    @Transactional
+    public void deleteProductOption(UUID productId, ProductOptionRequestDTO requestDTO) {
+        // 주어진 productId를 사용하여 Product 엔티티를 조회합니다.
+        Product product = findByProductId(productId);
+
+        // 요청 DTO에서 삭제할 옵션 ID 리스트를 가져옵니다.
+        List<UUID> optionIdList = requestDTO.getOptionIdList();
+
+        // 각 옵션 ID에 대해 반복문을 실행합니다.
+        for (UUID optionId : optionIdList) {
+            // 현재 옵션 ID로 Option 엔티티를 조회합니다.
+            Option option = optionService.findByOptionId(optionId);
+
+            // 특정 상품(productId)과 특정 옵션(optionId)에 연결된 ProductOption을 삭제합니다.
+            productOptionRepository.deleteByProduct_IdAndOption_Id(product.getId(), option.getId());
+        }
+    }
 
     // 상품 아이디로 상품 찾는 로직
     public Product findByProductId(UUID productId) {

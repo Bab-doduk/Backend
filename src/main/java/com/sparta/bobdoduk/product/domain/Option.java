@@ -3,10 +3,9 @@ package com.sparta.bobdoduk.product.domain;
 import com.sparta.bobdoduk.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -15,10 +14,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Product extends BaseEntity {
+public class Option extends BaseEntity {
 
     @Id
-    @Column(name = "product_id")
     private UUID id;
 
     private String name;
@@ -35,6 +33,6 @@ public class Product extends BaseEntity {
 
     private UUID storeId;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "option", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductOption> productOptions;
 }

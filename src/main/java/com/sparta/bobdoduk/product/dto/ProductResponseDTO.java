@@ -1,10 +1,12 @@
 package com.sparta.bobdoduk.product.dto;
 
 import com.sparta.bobdoduk.product.domain.Product;
+import com.sparta.bobdoduk.product.domain.ProductOption;
 import com.sparta.bobdoduk.product.domain.ProductStatus;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -33,6 +35,9 @@ public class ProductResponseDTO implements Serializable {
 
     private UUID storeId;
 
+    private List<ProductOptionResponseDTO> productOptions = new ArrayList<>();
+
+
     // 단일 엔티티를 DTO로 변환하는 메서드
     public static ProductResponseDTO fromEntity(Product product) {
         return ProductResponseDTO.builder()
@@ -44,6 +49,7 @@ public class ProductResponseDTO implements Serializable {
                 .image(product.getImage())
                 .createUserId(product.getCreateUserId())
                 .storeId(product.getStoreId())
+                .productOptions(ProductOptionResponseDTO.fromEntityList(product.getProductOptions()))
                 .build();
     }
 

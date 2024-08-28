@@ -1,5 +1,6 @@
 package com.sparta.bobdoduk.product.controller;
 
+import com.sparta.bobdoduk.product.dto.ProductOptionRequestDTO;
 import com.sparta.bobdoduk.product.dto.ProductRequestDTO;
 import com.sparta.bobdoduk.product.dto.ProductResponseDTO;
 import com.sparta.bobdoduk.product.dto.ProductSearchRequestDTO;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -57,9 +59,28 @@ public class ProductController {
         return ResponseEntity.ok().body(null);
     }
 
+    // 상품 검색
     @GetMapping("/search")
     public ResponseEntity<Page<ProductResponseDTO>> searchProduct(@RequestBody @Valid ProductSearchRequestDTO searchRequestDTO) {
         return ResponseEntity.ok().body(productService.searchProduct(searchRequestDTO));
+    }
+
+    // 상품 옵션 등록
+    @PostMapping("/{productId}/options")
+    public ResponseEntity<?> createProductOption(@PathVariable(name = "productId") UUID productId,
+                                                 @RequestBody ProductOptionRequestDTO productOptionRequestDTO) {
+
+        productService.createProductOption(productId, productOptionRequestDTO);
+        return ResponseEntity.ok().body(null);
+    }
+
+    // 상품 옵션 삭제
+    @DeleteMapping("/{productId}/options")
+    public ResponseEntity<?> deleteProductOption(@PathVariable(name = "productId") UUID productId,
+                                                 @RequestBody ProductOptionRequestDTO productOptionRequestDTO) {
+
+        productService.deleteProductOption(productId, productOptionRequestDTO);
+        return ResponseEntity.ok().body(null);
     }
 
 }
