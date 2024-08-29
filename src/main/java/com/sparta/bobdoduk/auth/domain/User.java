@@ -1,4 +1,4 @@
-package com.sparta.bobdoduk.auth;
+package com.sparta.bobdoduk.auth.domain;
 
 import com.sparta.bobdoduk.Auditing;
 import jakarta.persistence.*;

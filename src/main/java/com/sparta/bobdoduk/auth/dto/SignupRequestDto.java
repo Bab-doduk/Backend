@@ -1,4 +1,4 @@
-package com.sparta.bobdoduk.auth;
+package com.sparta.bobdoduk.auth.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

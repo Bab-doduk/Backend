@@ -1,8 +1,8 @@
 package com.sparta.bobdoduk.auth.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparta.bobdoduk.auth.LoginRequestDto;
-import com.sparta.bobdoduk.auth.UserRoleEnum;
+import com.sparta.bobdoduk.auth.dto.LoginRequestDto;
+import com.sparta.bobdoduk.auth.domain.UserRoleEnum;
 import com.sparta.bobdoduk.auth.jwt.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;

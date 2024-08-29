@@ -1,5 +1,10 @@
-package com.sparta.bobdoduk.auth;
+package com.sparta.bobdoduk.auth.service;
 
+import com.sparta.bobdoduk.auth.domain.User;
+import com.sparta.bobdoduk.auth.domain.UserRoleEnum;
+import com.sparta.bobdoduk.auth.dto.SignupRequestDto;
+import com.sparta.bobdoduk.auth.dto.SignupResponseDto;
+import com.sparta.bobdoduk.auth.repository.AuthRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
