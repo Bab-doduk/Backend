@@ -19,6 +19,7 @@ public abstract class BaseEntity {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+
     @Column(name = "created_by", updatable = false)
     @CreatedBy
     private String createdBy;
@@ -26,6 +27,7 @@ public abstract class BaseEntity {
     @LastModifiedDate
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
 
     @Column(name = "updated_by")
     @LastModifiedBy
@@ -46,4 +48,5 @@ public abstract class BaseEntity {
     public void preUpdate() {
         updatedAt = LocalDateTime.now();
     }
+
 }
