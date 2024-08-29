@@ -1,5 +1,7 @@
 package com.sparta.bobdoduk.product.service;
 
+import com.sparta.bobdoduk.global.exception.CustomException;
+import com.sparta.bobdoduk.global.exception.ErrorCode;
 import com.sparta.bobdoduk.product.domain.Option;
 import com.sparta.bobdoduk.product.dto.request.OptionRequestDTO;
 import com.sparta.bobdoduk.product.dto.request.OptionSearchRequestDTO;
@@ -111,7 +113,7 @@ public class OptionService {
     // 옵션 아이디로 옵션 찾는 로직
     public Option findByOptionId(UUID optionId) {
         return optionRepository.findById(optionId)
-                .orElseThrow(() -> new RuntimeException("옵션이 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.OPTION_NOT_FOUND));
     }
 
 }

@@ -1,5 +1,7 @@
 package com.sparta.bobdoduk.product.service;
 
+import com.sparta.bobdoduk.global.exception.CustomException;
+import com.sparta.bobdoduk.global.exception.ErrorCode;
 import com.sparta.bobdoduk.product.domain.Option;
 import com.sparta.bobdoduk.product.domain.Product;
 import com.sparta.bobdoduk.product.domain.ProductOption;
@@ -132,6 +134,7 @@ public class ProductService {
             // 옵션 ID로 Option 객체를 찾는다.
             Option option = optionService.findByOptionId(optionId);
 
+
             // Product와 Option을 연결하여 새로운 ProductOption 객체를 생성한다.
             ProductOption productOption = ProductOption.builder()
                     .id(productOption_id)  // 생성한 UUID를 ProductOption의 ID로 설정
@@ -166,7 +169,7 @@ public class ProductService {
     // 상품 아이디로 상품 찾는 로직
     public Product findByProductId(UUID productId) {
       return productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("상품이 없습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 
 

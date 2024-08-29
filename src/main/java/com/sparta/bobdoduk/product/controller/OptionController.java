@@ -1,15 +1,20 @@
 package com.sparta.bobdoduk.product.controller;
 
+import com.sparta.bobdoduk.global.dto.ApiResponseDto;
 import com.sparta.bobdoduk.product.dto.request.OptionRequestDTO;
 import com.sparta.bobdoduk.product.dto.request.OptionSearchRequestDTO;
 import com.sparta.bobdoduk.product.dto.response.OptionResponseDTO;
 import com.sparta.bobdoduk.product.service.OptionService;
+import com.sparta.bobdoduk.store.dto.response.StoreListResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -22,44 +27,60 @@ public class OptionController {
 
     // 옵션 생성
     @PostMapping
-    public ResponseEntity<?> createOption(@RequestBody OptionRequestDTO requestDTO) {
+    public ResponseEntity<ApiResponseDto<OptionResponseDTO>> createOption(@RequestBody OptionRequestDTO requestDTO) {
 
-        return ResponseEntity.ok().body(optionService.createOption(requestDTO));
+        OptionResponseDTO option = optionService.createOption(requestDTO);
+
+        return ResponseEntity.ok().body(new ApiResponseDto<>(HttpStatus.OK, "옵션 등록 성공", option));
     }
+
 
     // 옵션 단건 조회
     @GetMapping("/{id}")
-    public ResponseEntity<?> getOption(@PathVariable(name = "id") UUID optionId) {
+    public ResponseEntity<ApiResponseDto<OptionResponseDTO>> getOption(@PathVariable(name = "id") UUID optionId) {
 
-        return ResponseEntity.ok().body(optionService.getOption(optionId));
+        OptionResponseDTO option = optionService.getOption(optionId);
+
+        return ResponseEntity.ok().body(new ApiResponseDto<>(HttpStatus.OK, "옵션 단건 조회 성공", option));
     }
 
     // 옵션 전체 조회
     @GetMapping
-    public ResponseEntity<?> getAllOption() {
+    public ResponseEntity<ApiResponseDto<List<OptionResponseDTO>>> getAllOption() {
 
-        return ResponseEntity.ok().body(optionService.getAllOption());
+        List<OptionResponseDTO> options = optionService.getAllOption();
+
+        return ResponseEntity.ok().body(new ApiResponseDto<>(HttpStatus.OK, "옵션 전체 조회 성공", options));
+
     }
 
     // 옵션 수정
     @PatchMapping("/{id}")
-    public ResponseEntity<?> updateOption(@PathVariable(name = "id") UUID optionId,
-                                           @RequestBody OptionRequestDTO requestDTO) {
+    public ResponseEntity<ApiResponseDto<OptionResponseDTO>> updateOption(@PathVariable(name = "id") UUID optionId,
+                                                                          @RequestBody OptionRequestDTO requestDTO) {
 
-        return ResponseEntity.ok().body(optionService.updateOption(optionId, requestDTO));
+        OptionResponseDTO option = optionService.updateOption(optionId, requestDTO);
+
+        return ResponseEntity.ok().body(new ApiResponseDto<>(HttpStatus.OK, "옵션 수정 성공", option));
+
     }
 
     // 옵션 삭제
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteOption(@PathVariable(name = "id") UUID optionId) {
+    public ResponseEntity<ApiResponseDto<Void>> deleteOption(@PathVariable(name = "id") UUID optionId) {
+
         optionService.deleteOption(optionId);
-        return ResponseEntity.ok().body(null);
+
+        return ResponseEntity.ok().body(new ApiResponseDto<>(HttpStatus.OK, "옵션 삭제 성공", null));
     }
 
     // 옵션 검색
     @GetMapping("/search")
-    public ResponseEntity<Page<OptionResponseDTO>> searchOption(@RequestBody @Valid OptionSearchRequestDTO searchRequestDTO) {
-        return ResponseEntity.ok().body(optionService.searchOption(searchRequestDTO));
+    public ResponseEntity<ApiResponseDto<Page<OptionResponseDTO>>> searchOption(@RequestBody @Valid OptionSearchRequestDTO searchRequestDTO) {
+
+        Page<OptionResponseDTO> options = optionService.searchOption(searchRequestDTO);
+
+        return ResponseEntity.ok().body(new ApiResponseDto<>(HttpStatus.OK, "옵션 검색 성공", options));
     }
 
 
