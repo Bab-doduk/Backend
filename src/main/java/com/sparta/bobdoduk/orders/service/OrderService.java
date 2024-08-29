@@ -8,9 +8,11 @@ import com.sparta.bobdoduk.orders.dto.OrderReqDto;
 import com.sparta.bobdoduk.orders.dto.OrderResDto;
 import com.sparta.bobdoduk.product.domain.Product;
 import com.sparta.bobdoduk.product.repository.ProductRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -70,13 +72,16 @@ public class OrderService {
         return OrderResDto.fromEntity(order);
     }
 
+    @Transactional(readOnly = true)
     public OrderResDto getOrder(UUID orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("해당 주문이 존재하지 않습니다."));
         return OrderResDto.fromEntity(order);
     }
 
-    public List<OrderResDto> getAllOrders() {
-        return OrderResDto.fromEntityList(orderRepository.findAll());
+    @Transactional(readOnly = true)
+    public Page<OrderResDto> getAllOrders(Pageable pageable) {
+        Page<Order> orders = orderRepository.findAll(pageable);
+        return orders.map(OrderResDto::fromEntity);
     }
 
 //    @Transactional

@@ -1,8 +1,11 @@
 package com.sparta.bobdoduk.orders.controller;
 
 import com.sparta.bobdoduk.orders.dto.OrderReqDto;
+import com.sparta.bobdoduk.orders.dto.OrderResDto;
 import com.sparta.bobdoduk.orders.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,8 +29,9 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllOrders() {
-        return ResponseEntity.ok().body(orderService.getAllOrders());
+    public ResponseEntity<?> getAllOrders(Pageable pageable) {
+        Page<OrderResDto> orders = orderService.getAllOrders(pageable);
+        return ResponseEntity.ok().body(orders);
     }
 
     @PatchMapping("/{order_id}")
