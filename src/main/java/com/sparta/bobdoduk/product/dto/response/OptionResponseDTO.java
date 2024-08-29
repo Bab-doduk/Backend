@@ -1,7 +1,6 @@
-package com.sparta.bobdoduk.product.dto;
+package com.sparta.bobdoduk.product.dto.response;
 
 import com.sparta.bobdoduk.product.domain.Option;
-import com.sparta.bobdoduk.product.domain.Product;
 import com.sparta.bobdoduk.product.domain.ProductStatus;
 import lombok.*;
 

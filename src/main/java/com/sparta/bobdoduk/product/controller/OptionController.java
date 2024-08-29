@@ -1,8 +1,9 @@
 package com.sparta.bobdoduk.product.controller;
 
-import com.sparta.bobdoduk.product.dto.*;
+import com.sparta.bobdoduk.product.dto.request.OptionRequestDTO;
+import com.sparta.bobdoduk.product.dto.request.OptionSearchRequestDTO;
+import com.sparta.bobdoduk.product.dto.response.OptionResponseDTO;
 import com.sparta.bobdoduk.product.service.OptionService;
-import com.sparta.bobdoduk.product.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

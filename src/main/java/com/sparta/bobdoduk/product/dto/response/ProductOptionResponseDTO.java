@@ -1,11 +1,6 @@
-package com.sparta.bobdoduk.product.dto;
+package com.sparta.bobdoduk.product.dto.response;
 
-import com.sparta.bobdoduk.product.domain.Option;
-import com.sparta.bobdoduk.product.domain.Product;
 import com.sparta.bobdoduk.product.domain.ProductOption;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.*;
 
 import java.util.List;

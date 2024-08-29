@@ -1,18 +1,16 @@
 package com.sparta.bobdoduk.product.controller;
 
-import com.sparta.bobdoduk.product.dto.ProductOptionRequestDTO;
-import com.sparta.bobdoduk.product.dto.ProductRequestDTO;
-import com.sparta.bobdoduk.product.dto.ProductResponseDTO;
-import com.sparta.bobdoduk.product.dto.ProductSearchRequestDTO;
+import com.sparta.bobdoduk.product.dto.request.ProductOptionRequestDTO;
+import com.sparta.bobdoduk.product.dto.request.ProductRequestDTO;
+import com.sparta.bobdoduk.product.dto.response.ProductResponseDTO;
+import com.sparta.bobdoduk.product.dto.request.ProductSearchRequestDTO;
 import com.sparta.bobdoduk.product.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController

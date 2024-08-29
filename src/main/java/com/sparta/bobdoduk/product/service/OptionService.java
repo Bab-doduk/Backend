@@ -1,7 +1,9 @@
 package com.sparta.bobdoduk.product.service;
 
 import com.sparta.bobdoduk.product.domain.Option;
-import com.sparta.bobdoduk.product.dto.*;
+import com.sparta.bobdoduk.product.dto.request.OptionRequestDTO;
+import com.sparta.bobdoduk.product.dto.request.OptionSearchRequestDTO;
+import com.sparta.bobdoduk.product.dto.response.OptionResponseDTO;
 import com.sparta.bobdoduk.product.repository.OptionRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

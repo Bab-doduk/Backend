@@ -1,15 +1,14 @@
-package com.sparta.bobdoduk.product.dto;
+package com.sparta.bobdoduk.product.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OptionSearchRequestDTO {
+public class ProductSearchRequestDTO {
 
     @NotBlank(message = "검색어를 입력해주세요")
     private String query;

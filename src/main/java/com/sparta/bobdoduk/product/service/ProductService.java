@@ -3,10 +3,10 @@ package com.sparta.bobdoduk.product.service;
 import com.sparta.bobdoduk.product.domain.Option;
 import com.sparta.bobdoduk.product.domain.Product;
 import com.sparta.bobdoduk.product.domain.ProductOption;
-import com.sparta.bobdoduk.product.dto.ProductOptionRequestDTO;
-import com.sparta.bobdoduk.product.dto.ProductRequestDTO;
-import com.sparta.bobdoduk.product.dto.ProductResponseDTO;
-import com.sparta.bobdoduk.product.dto.ProductSearchRequestDTO;
+import com.sparta.bobdoduk.product.dto.request.ProductOptionRequestDTO;
+import com.sparta.bobdoduk.product.dto.request.ProductRequestDTO;
+import com.sparta.bobdoduk.product.dto.response.ProductResponseDTO;
+import com.sparta.bobdoduk.product.dto.request.ProductSearchRequestDTO;
 import com.sparta.bobdoduk.product.repository.OptionRepository;
 import com.sparta.bobdoduk.product.repository.ProductOptionRepository;
 import com.sparta.bobdoduk.product.repository.ProductRepository;
@@ -19,7 +19,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -169,9 +168,6 @@ public class ProductService {
       return productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("상품이 없습니다."));
     }
-
-
-
 
 
 }

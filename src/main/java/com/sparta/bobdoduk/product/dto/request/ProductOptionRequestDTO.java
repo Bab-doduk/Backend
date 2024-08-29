@@ -1,4 +1,4 @@
-package com.sparta.bobdoduk.product.dto;
+package com.sparta.bobdoduk.product.dto.request;
 
 import lombok.*;
 
