@@ -1,6 +1,6 @@
 package com.sparta.bobdoduk.payment.domain;
 
-import jakarta.persistence.*;
+import com.sparta.bobdoduk.auth.domain.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,12 +33,21 @@ public class Payment {
     @Column(nullable = false)
     private PaymentStatus status;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     @Builder
-    public Payment(UUID orderId, PaymentMethod paymentMethod, BigDecimal price, PaymentStatus status) {
+    public Payment(UUID orderId, PaymentMethod paymentMethod, BigDecimal price, PaymentStatus status, User user) {
         this.orderId = orderId;
         this.paymentMethod = paymentMethod;
         this.price = price;
         this.status = status;
+        this.user = user;
+    }
+
+    public UUID getUserId() {
+        return this.user.getId();
     }
 
 }

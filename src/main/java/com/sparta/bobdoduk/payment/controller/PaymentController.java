@@ -1,12 +1,17 @@
 package com.sparta.bobdoduk.payment.controller;
 
+import com.sparta.bobdoduk.auth.security.UserDetailsImpl;
 import com.sparta.bobdoduk.global.dto.ApiResponseDto;
 import com.sparta.bobdoduk.payment.dto.request.PaymentRequestDto;
 import com.sparta.bobdoduk.payment.dto.response.PaymentResponseDto;
 import com.sparta.bobdoduk.payment.service.PaymentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -36,4 +41,15 @@ public class PaymentController {
         PaymentResponseDto payment = paymentService.getPayment(paymentId);
         return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "결제 상세정보 조회 성공", payment));
     }
+
+    /**
+     * 결제 목록 전체 조회 (고객)
+     */
+    @GetMapping("/customer")
+    public ResponseEntity<ApiResponseDto<Page<PaymentResponseDto>>> getAllPaymentsCustomer(@AuthenticationPrincipal UserDetailsImpl userDetails, Pageable pageable) {
+        UUID userId = userDetails.getUser().getId();
+        Page<PaymentResponseDto> payments = paymentService.getAllPaymentsCustomer(userId, pageable);
+        return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "고객 결제 목록 조회 성공", payments));
+    }
+
 }

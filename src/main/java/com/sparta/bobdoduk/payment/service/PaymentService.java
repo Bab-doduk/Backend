@@ -7,6 +7,8 @@ import com.sparta.bobdoduk.payment.dto.request.PaymentRequestDto;
 import com.sparta.bobdoduk.payment.dto.response.PaymentResponseDto;
 import com.sparta.bobdoduk.payment.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,5 +41,11 @@ public class PaymentService {
                 .orElseThrow(() -> new CustomException(ErrorCode.PAYMENT_NOT_FOUND));
     }
 
-
+    // 결제 목록 전체 조회 (고객)
+    @Transactional(readOnly = true)
+    public Page<PaymentResponseDto> getAllPaymentsCustomer(UUID userId, Pageable pageable) {
+        // 고객 ID에 대한 필터링 로직 필요
+        return paymentRepository.findAllByUser_Id(userId, pageable)
+                .map(PaymentResponseDto::from);
+    }
 }
