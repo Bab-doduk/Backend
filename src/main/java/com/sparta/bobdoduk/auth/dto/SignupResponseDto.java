@@ -9,6 +9,6 @@ import java.util.UUID;
 @Builder
 public class SignupResponseDto {
     private final UUID id;
-    private final String nickname;
+    private final String username;
     private final String role;
 }

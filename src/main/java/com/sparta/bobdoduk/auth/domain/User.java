@@ -18,12 +18,8 @@ import java.util.UUID;
 public class User extends Auditing {
     @Id
     private UUID id;
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
-    @Column(nullable = false)
-    private String nickname;
-    @Column(nullable = false)
-    private String email;
     @Column(nullable = false)
     private String password;
     @Column(nullable = false)
