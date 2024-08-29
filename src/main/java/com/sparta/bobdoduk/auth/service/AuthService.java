@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -24,6 +25,12 @@ public class AuthService {
     @Transactional
     public SignupResponseDto signup(SignupRequestDto requestDto) {
 
+        String username = requestDto.getUsername();
+        Optional<User> checkUsername = userRepository.findByUsername(username);
+        if (checkUsername.isPresent()) {
+            throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
+        }
+
         UserRoleEnum userRole = switch (requestDto.getRole()) {
             case "OWNER" -> UserRoleEnum.OWNER;
             case "MANAGER" -> UserRoleEnum.MANAGER;
@@ -36,8 +43,6 @@ public class AuthService {
         User user = User.builder()
                 .id(UUID.randomUUID())
                 .username(requestDto.getUsername())
-                .nickname(requestDto.getNickname())
-                .email(requestDto.getEmail())
                 .password(password)
                 .role(userRole)
                 .phone_number(requestDto.getPhone_number())
@@ -47,7 +52,7 @@ public class AuthService {
         userRepository.save(user);
         return SignupResponseDto.builder()
                 .id(user.getId())
-                .nickname(user.getNickname())
+                .username(user.getUsername())
                 .role(user.getRole().toString())
                 .build();
     }
