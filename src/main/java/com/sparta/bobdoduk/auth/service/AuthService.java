@@ -4,7 +4,7 @@ import com.sparta.bobdoduk.auth.domain.User;
 import com.sparta.bobdoduk.auth.domain.UserRoleEnum;
 import com.sparta.bobdoduk.auth.dto.SignupRequestDto;
 import com.sparta.bobdoduk.auth.dto.SignupResponseDto;
-import com.sparta.bobdoduk.auth.repository.AuthRepository;
+import com.sparta.bobdoduk.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,7 +18,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final AuthRepository authRepository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
@@ -44,7 +44,7 @@ public class AuthService {
                 .address_1(requestDto.getAddress_1())
                 .address_2(requestDto.getAddress_2()).build();
 
-        authRepository.save(user);
+        userRepository.save(user);
         return SignupResponseDto.builder()
                 .id(user.getId())
                 .nickname(user.getNickname())
