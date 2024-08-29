@@ -55,4 +55,11 @@ public class PaymentService {
         return paymentRepository.findAllByStore_OwnerId(ownerId, pageable)
                 .map(PaymentResponseDto::from);
     }
+
+    // 결제 목록 전체 조회 (모든 결제 내역)
+    @Transactional(readOnly = true)
+    public Page<PaymentResponseDto> getAllPayments(Pageable pageable) {
+        return paymentRepository.findAll(pageable)
+                .map(PaymentResponseDto::from);
+    }
 }
