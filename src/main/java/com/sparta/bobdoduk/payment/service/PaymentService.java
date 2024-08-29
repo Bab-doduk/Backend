@@ -48,4 +48,11 @@ public class PaymentService {
         return paymentRepository.findAllByUser_Id(userId, pageable)
                 .map(PaymentResponseDto::from);
     }
+
+    // 결제 목록 전체 조회 (가게)
+    @Transactional(readOnly = true)
+    public Page<PaymentResponseDto> getAllPaymentsStore(UUID ownerId, Pageable pageable) {
+        return paymentRepository.findAllByStore_OwnerId(ownerId, pageable)
+                .map(PaymentResponseDto::from);
+    }
 }

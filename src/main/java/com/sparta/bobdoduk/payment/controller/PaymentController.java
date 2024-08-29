@@ -52,4 +52,15 @@ public class PaymentController {
         return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "고객 결제 목록 조회 성공", payments));
     }
 
+    /**
+     * 결제 목록 전체 조회 (가게)
+     */
+    @GetMapping("/store")
+    public ResponseEntity<ApiResponseDto<Page<PaymentResponseDto>>> getAllPaymentsForStore(@AuthenticationPrincipal UserDetailsImpl userDetails, Pageable pageable) {
+        UUID ownerId = userDetails.getUser().getId();
+        Page<PaymentResponseDto> payments = paymentService.getAllPaymentsStore(ownerId, pageable);
+        return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "상점 결제 목록 조회 성공", payments));
+    }
+
+
 }
