@@ -1,7 +1,7 @@
 package com.sparta.bobdoduk.auth.security;
 
-import com.sparta.bobdoduk.auth.User;
-import com.sparta.bobdoduk.auth.UserRoleEnum;
+import com.sparta.bobdoduk.auth.domain.User;
+import com.sparta.bobdoduk.auth.domain.UserRoleEnum;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;

@@ -1,5 +1,8 @@
-package com.sparta.bobdoduk.auth;
+package com.sparta.bobdoduk.auth.controller;
 
+import com.sparta.bobdoduk.auth.service.AuthService;
+import com.sparta.bobdoduk.auth.dto.SignupRequestDto;
+import com.sparta.bobdoduk.auth.dto.SignupResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

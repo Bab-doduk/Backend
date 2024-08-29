@@ -1,7 +1,7 @@
 package com.sparta.bobdoduk.auth.security;
 
-import com.sparta.bobdoduk.auth.AuthRepository;
-import com.sparta.bobdoduk.auth.User;
+import com.sparta.bobdoduk.auth.repository.AuthRepository;
+import com.sparta.bobdoduk.auth.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -1,6 +1,6 @@
 package com.sparta.bobdoduk.auth.jwt;
 
-import com.sparta.bobdoduk.auth.UserRoleEnum;
+import com.sparta.bobdoduk.auth.domain.UserRoleEnum;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
