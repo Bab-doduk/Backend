@@ -1,15 +1,20 @@
 package com.sparta.bobdoduk.auth.service;
 
 import com.sparta.bobdoduk.auth.domain.User;
+import com.sparta.bobdoduk.auth.domain.UserRoleEnum;
+import com.sparta.bobdoduk.auth.dto.UpdateUserInfoDto;
 import com.sparta.bobdoduk.auth.dto.UserInfoDto;
 import com.sparta.bobdoduk.auth.repository.UserRepository;
+import com.sparta.bobdoduk.auth.security.UserDetailsImpl;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -17,6 +22,7 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public List<UserAllResponseDto> getAllUsers() {
         List<User> users = userRepository.findAll();
@@ -32,6 +38,37 @@ public class UserService {
     }
 
     public UserInfoDto getUserInfo(User user) {
+        return UserInfoDto.fromEntity(user);
+    }
+
+    public UserInfoDto updateUserInfo(UserDetailsImpl userDetails, UpdateUserInfoDto userInfo) {
+        User user = userDetails.getUser();
+
+        Optional<User> checkUsername = userRepository.findByUsername(userInfo.getUsername());
+        if (checkUsername.isPresent() && !userInfo.getUsername().equals(user.getUsername())) {
+            throw new IllegalArgumentException("중복된 아이디가 존재합니다.");
+        }
+
+        if (!passwordEncoder.matches(userInfo.getCurrent_password(), user.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+        UserRoleEnum userRole = switch (userInfo.getRole()) {
+            case "OWNER" -> UserRoleEnum.OWNER;
+            case "MANAGER" -> UserRoleEnum.MANAGER;
+            case "MASTER" -> UserRoleEnum.MASTER;
+            default -> UserRoleEnum.CUSTOMER;
+        };
+
+        user.setUsername(userInfo.getUsername());
+        user.setPassword(passwordEncoder.encode(userInfo.getPassword()));
+        user.setRole(userRole);
+        user.setPhone_number(userInfo.getPhone_number());
+        user.setAddress_1(userInfo.getAddress_1());
+        user.setAddress_2(userInfo.getAddress_2());
+
+        userRepository.save(user);
+
         return UserInfoDto.fromEntity(user);
     }
 

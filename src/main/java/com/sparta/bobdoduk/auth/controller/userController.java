@@ -1,6 +1,7 @@
 package com.sparta.bobdoduk.auth.controller;
 
 import com.sparta.bobdoduk.auth.domain.User;
+import com.sparta.bobdoduk.auth.dto.UpdateUserInfoDto;
 import com.sparta.bobdoduk.auth.dto.UserInfoDto;
 import com.sparta.bobdoduk.auth.security.UserDetailsImpl;
 import com.sparta.bobdoduk.auth.service.UserService;
@@ -10,6 +11,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -33,5 +36,12 @@ public class userController {
     public ResponseEntity<UserInfoDto> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
         return ResponseEntity.ok(userService.getUserInfo(user));
+    }
+
+    @PutMapping("/user")
+    @PreAuthorize("hasRole('CUSTOMER') or hasRole('OWNER')")
+    public ResponseEntity<UserInfoDto> updateUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                      @RequestBody UpdateUserInfoDto userInfo) {
+        return ResponseEntity.ok(userService.updateUserInfo(userDetails,userInfo));
     }
 }
