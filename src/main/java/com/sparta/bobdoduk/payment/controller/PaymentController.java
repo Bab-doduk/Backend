@@ -29,8 +29,10 @@ public class PaymentController {
      * 결제 생성
      */
     @PostMapping
-    public ResponseEntity<ApiResponseDto<PaymentResponseDto>> createPayment(@RequestBody PaymentRequestDto request) {
-        PaymentResponseDto createdPayment = paymentService.createPayment(request);
+    public ResponseEntity<ApiResponseDto<PaymentResponseDto>> createPayment(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                                            @RequestBody PaymentRequestDto request) {
+        UUID userId = userDetails.getUser().getId();
+        PaymentResponseDto createdPayment = paymentService.createPayment(request, userId);
         return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.CREATED, "결제 생성 성공", createdPayment));
     }
 

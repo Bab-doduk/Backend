@@ -32,7 +32,7 @@ public class Payment {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private PaymentStatus status;
+    private PaymentStatus status = PaymentStatus.PENDING; // 기본값 설정
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -47,7 +47,7 @@ public class Payment {
         this.orderId = orderId;
         this.paymentMethod = paymentMethod;
         this.price = price;
-        this.status = status;
+        this.status = status != null ? status : PaymentStatus.PENDING;
         this.user = user;
         this.store = store;
     }

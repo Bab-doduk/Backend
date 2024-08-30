@@ -15,5 +15,5 @@ public class PaymentRequestDto {
     private UUID orderId;
     private PaymentMethod paymentMethod;
     private BigDecimal price;
-    private PaymentStatus status;
+    private UUID storeId;
 }
