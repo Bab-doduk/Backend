@@ -21,7 +21,7 @@ public class Ai extends BaseEntity {
     @Id
     private UUID id;
 
-    private String userId;
+    private UUID userId;
 
     @Column(length = 2000) // 500자로 길이를 늘림
     private String response;

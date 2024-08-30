@@ -17,12 +17,21 @@ public class AuditorAwareImpl implements AuditorAware<String> {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         // 인증 정보가 없을 경우 기본 값을 반환
-        if (authentication == null) {
+        if (authentication == null || !authentication.isAuthenticated()) {
             return Optional.empty();
         }
 
-        // 인증된 사용자의 UserDetailsImpl을 가져오고, 사용자 ID를 반환
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        return Optional.of(userDetails.getUser().getUsername());
+        // principal이 UserDetailsImpl인지 확인 후 캐스팅
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof UserDetailsImpl) {
+            UserDetailsImpl userDetails = (UserDetailsImpl) principal;
+            return Optional.of(userDetails.getUsername());
+        } else if (principal instanceof String) {
+            // principal이 문자열인 경우 (일반적으로 anonymousUser)
+            return Optional.of((String) principal);
+        }
+
+        // 이외의 경우에는 Optional.empty() 반환
+        return Optional.empty();
     }
 }
