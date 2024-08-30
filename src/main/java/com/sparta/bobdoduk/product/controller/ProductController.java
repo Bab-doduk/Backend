@@ -1,5 +1,6 @@
 package com.sparta.bobdoduk.product.controller;
 
+import com.sparta.bobdoduk.auth.security.UserDetailsImpl;
 import com.sparta.bobdoduk.global.dto.ApiResponseDto;
 import com.sparta.bobdoduk.product.dto.request.ProductOptionRequestDTO;
 import com.sparta.bobdoduk.product.dto.request.ProductRequestDTO;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,9 +29,10 @@ public class ProductController {
 
     // 상품 생성
     @PostMapping
-    public ResponseEntity<ApiResponseDto<ProductResponseDTO>> createProduct(@RequestBody ProductRequestDTO requestDTO) {
+    public ResponseEntity<ApiResponseDto<ProductResponseDTO>> createProduct(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                                            @RequestBody ProductRequestDTO requestDTO) {
 
-        ProductResponseDTO product = productService.createProduct(requestDTO);
+        ProductResponseDTO product = productService.createProduct(userDetails, requestDTO);
 
         return ResponseEntity.ok().body(new ApiResponseDto<>(HttpStatus.OK, "상품 등록 성공", product));
     }
@@ -54,10 +57,11 @@ public class ProductController {
 
     // 상품 수정
     @PatchMapping("/{id}")
-    public ResponseEntity<ApiResponseDto<ProductResponseDTO>> updateProduct(@PathVariable(name = "id") UUID productId,
-                                           @RequestBody ProductRequestDTO requestDTO) {
+    public ResponseEntity<ApiResponseDto<ProductResponseDTO>> updateProduct(@AuthenticationPrincipal UserDetailsImpl userDetails ,
+                                                                            @PathVariable(name = "id") UUID productId,
+                                                                            @RequestBody ProductRequestDTO requestDTO) {
 
-        ProductResponseDTO product = productService.updateProduct(productId, requestDTO);
+        ProductResponseDTO product = productService.updateProduct(userDetails, productId, requestDTO);
 
         return ResponseEntity.ok().body(new ApiResponseDto<>(HttpStatus.OK, "상품 수정 성공", product));
     }

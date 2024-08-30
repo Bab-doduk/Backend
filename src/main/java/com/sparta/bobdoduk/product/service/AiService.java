@@ -2,6 +2,7 @@ package com.sparta.bobdoduk.product.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.bobdoduk.auth.security.UserDetailsImpl;
 import com.sparta.bobdoduk.product.domain.Ai;
 import com.sparta.bobdoduk.product.repository.AiRepository;
 import jakarta.transaction.Transactional;
@@ -34,7 +35,9 @@ public class AiService {
     }
 
     @Transactional
-    public String createAiResponse(String apiKey, String prompt) {
+    public String createAiResponse(UserDetailsImpl userDetails, String apiKey, String prompt) {
+
+      ;
 
         UUID ai_id = UUID.randomUUID();
 
@@ -44,7 +47,7 @@ public class AiService {
 
         Ai ai = Ai.builder()
                 .id(ai_id)
-                .userId("")
+                .userId(userDetails.getUser().getId())
                 .response(response)
                 .build();
 
