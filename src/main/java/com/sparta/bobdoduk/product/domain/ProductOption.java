@@ -13,6 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "p_product_options")
 public class ProductOption extends BaseEntity {
 
     @Id
