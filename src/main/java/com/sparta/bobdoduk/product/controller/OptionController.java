@@ -1,5 +1,6 @@
 package com.sparta.bobdoduk.product.controller;
 
+import com.sparta.bobdoduk.auth.security.UserDetailsImpl;
 import com.sparta.bobdoduk.global.dto.ApiResponseDto;
 import com.sparta.bobdoduk.product.dto.request.OptionRequestDTO;
 import com.sparta.bobdoduk.product.dto.request.OptionSearchRequestDTO;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,9 +29,11 @@ public class OptionController {
 
     // 옵션 생성
     @PostMapping
-    public ResponseEntity<ApiResponseDto<OptionResponseDTO>> createOption(@RequestBody OptionRequestDTO requestDTO) {
+    public ResponseEntity<ApiResponseDto<OptionResponseDTO>> createOption(@RequestBody OptionRequestDTO requestDTO,
+                                                                          @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        OptionResponseDTO option = optionService.createOption(requestDTO);
+
+        OptionResponseDTO option = optionService.createOption(requestDTO, userDetails);
 
         return ResponseEntity.ok().body(new ApiResponseDto<>(HttpStatus.OK, "옵션 등록 성공", option));
     }
