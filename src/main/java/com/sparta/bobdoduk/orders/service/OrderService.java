@@ -1,5 +1,7 @@
 package com.sparta.bobdoduk.orders.service;
 
+import com.sparta.bobdoduk.auth.domain.User;
+import com.sparta.bobdoduk.auth.domain.UserRoleEnum;
 import com.sparta.bobdoduk.orders.domain.OrderProduct;
 import com.sparta.bobdoduk.orders.repository.OrderProductRepository;
 import com.sparta.bobdoduk.orders.repository.OrderRepository;
@@ -29,7 +31,7 @@ public class OrderService {
     private final OrderProductRepository orderProductRepository;
 
     @Transactional
-    public OrderResDto createOrder(OrderReqDto orderReqDto) {
+    public OrderResDto createOrder(UUID userId, OrderReqDto orderReqDto) {
         //totalPrice 계산
         Double totalPrice = orderReqDto.getOrderProducts().stream()
                 .mapToDouble(orderProductDto -> orderProductDto.getPrice() * orderProductDto.getQuantity())
@@ -37,7 +39,7 @@ public class OrderService {
 
         Order order = Order.builder()
                 .orderId(UUID.randomUUID())
-                .userId(orderReqDto.getUserId())
+                .userId(userId)
                 .storeId(orderReqDto.getStoreId())
                 .orderStatus(orderReqDto.getOrderStatus())
                 .orderType(orderReqDto.getOrderType())
@@ -73,14 +75,28 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public OrderResDto getOrder(UUID orderId) {
+    public OrderResDto getOrder(UUID orderId, UUID userId) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("해당 주문이 존재하지 않습니다."));
+
+        if(!order.getUserId().equals(userId)) {
+            throw new RuntimeException("주문 조회할 권한이 없습니다.");
+        }
+
         return OrderResDto.fromEntity(order);
     }
 
     @Transactional(readOnly = true)
-    public Page<OrderResDto> getAllOrders(Pageable pageable) {
-        Page<Order> orders = orderRepository.findAll(pageable);
+    public Page<OrderResDto> getAllOrders(User user, Pageable pageable) {
+        Page<Order> orders;
+
+        if (user.getRole().equals(UserRoleEnum.MASTER)) {
+            // 사용자가 관리자(MASTER)인 경우, 모든 주문을 조회
+            orders = orderRepository.findAll(pageable);
+        } else {
+            // 그 외의 경우, 해당 사용자와 관련된 주문만 조회
+            orders = orderRepository.findByUserId(user.getId(), pageable);
+        }
+
         return orders.map(OrderResDto::fromEntity);
     }
 
@@ -136,10 +152,14 @@ public class OrderService {
 //    }
 
     @Transactional
-    public OrderResDto updateOrder(UUID orderId, OrderReqDto orderReqDto) {
+    public OrderResDto updateOrder(UUID orderId, UUID userId, OrderReqDto orderReqDto) {
         // 기존 주문 조회
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found: " + orderId));
+
+        if(!order.getUserId().equals(userId)) {
+            throw new RuntimeException("주문 수정할 권한이 없습니다.");
+        }
 
         // totalPrice 계산
         Double totalPrice = orderReqDto.getOrderProducts().stream()
@@ -187,7 +207,14 @@ public class OrderService {
 
 
     @Transactional
-    public void deleteOrder(UUID orderId) {
+    public void deleteOrder(UUID orderId, UUID userId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found: " + orderId));
+
+        if(!order.getUserId().equals(userId)) {
+            throw new RuntimeException("주문 수정할 권한이 없습니다.");
+        }
+
         orderRepository.deleteById(orderId);
     }
 

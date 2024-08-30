@@ -10,7 +10,7 @@ import java.util.UUID;
 @Data
 public class OrderReqDto {
 
-    private UUID userId;
+//    private UUID userId;
     private UUID storeId;
     private OrderStatus orderStatus; // 주문 상태 (예: 완료)
     private OrderType orderType;   // 주문 유형 (ONLINE, OFFLINE)
