@@ -1,5 +1,6 @@
 package com.sparta.bobdoduk.product.repository;
 
+import com.sparta.bobdoduk.product.domain.Option;
 import com.sparta.bobdoduk.product.domain.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,11 +12,10 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, UUID> {
+public interface OptionRepository extends JpaRepository<Option, UUID> {
 
-    @Query("SELECT p " +
-            "FROM Product p " +
-            "WHERE p.name LIKE %:query% OR p.description LIKE %:query%")
-    Page<Product> searchProducts(@Param("query") String query, Pageable pageable);
-
+    @Query("SELECT o " +
+            "FROM Option o " +
+            "WHERE o.name LIKE %:query% OR o.description LIKE %:query%")
+    Page<Option> searchOptions(@Param("query") String query, Pageable pageable);
 }

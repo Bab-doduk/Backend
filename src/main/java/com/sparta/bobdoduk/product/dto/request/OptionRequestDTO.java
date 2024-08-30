@@ -1,4 +1,4 @@
-package com.sparta.bobdoduk.product.dto;
+package com.sparta.bobdoduk.product.dto.request;
 
 import com.sparta.bobdoduk.product.domain.ProductStatus;
 import lombok.*;
@@ -10,7 +10,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductRequestDTO {
+public class OptionRequestDTO {
 
     private String name;
 
