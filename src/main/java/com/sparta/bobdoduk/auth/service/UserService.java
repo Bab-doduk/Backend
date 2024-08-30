@@ -1,7 +1,7 @@
 package com.sparta.bobdoduk.auth.service;
 
 import com.sparta.bobdoduk.auth.domain.User;
-import com.sparta.bobdoduk.auth.dto.UserResponseDto;
+import com.sparta.bobdoduk.auth.dto.UserInfoDto;
 import com.sparta.bobdoduk.auth.repository.UserRepository;
 import lombok.Builder;
 import lombok.Data;
@@ -29,6 +29,10 @@ public class UserService {
                             .build());
         }
         return AllUsers;
+    }
+
+    public UserInfoDto getUserInfo(User user) {
+        return UserInfoDto.fromEntity(user);
     }
 
     @Builder
