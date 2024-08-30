@@ -60,10 +60,11 @@ public class OptionController {
 
     // 옵션 수정
     @PatchMapping("/{id}")
-    public ResponseEntity<ApiResponseDto<OptionResponseDTO>> updateOption(@PathVariable(name = "id") UUID optionId,
+    public ResponseEntity<ApiResponseDto<OptionResponseDTO>> updateOption(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                                          @PathVariable(name = "id") UUID optionId,
                                                                           @RequestBody OptionRequestDTO requestDTO) {
 
-        OptionResponseDTO option = optionService.updateOption(optionId, requestDTO);
+        OptionResponseDTO option = optionService.updateOption(userDetails, optionId, requestDTO);
 
         return ResponseEntity.ok().body(new ApiResponseDto<>(HttpStatus.OK, "옵션 수정 성공", option));
 

@@ -62,7 +62,8 @@ public class OptionService {
 
     // 옵션 수정
     @Transactional
-    public OptionResponseDTO updateOption(UUID optionId, OptionRequestDTO requestDTO) {
+    public OptionResponseDTO updateOption(UserDetailsImpl userDetails, UUID optionId, OptionRequestDTO requestDTO) {
+        
 
         Option option = findByOptionId(optionId);
 
@@ -71,7 +72,7 @@ public class OptionService {
         option.setPrice(requestDTO.getPrice());
         option.setProductStatus(requestDTO.getProductStatus());
         option.setImage(requestDTO.getImage());
-        option.setCreateUserId(requestDTO.getCreateUserId());
+        option.setCreateUserId(userDetails.getUser().getId());
         option.setStoreId(requestDTO.getStoreId());
 
         return OptionResponseDTO.fromEntity(option);

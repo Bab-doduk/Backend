@@ -1,5 +1,6 @@
 package com.sparta.bobdoduk.product.service;
 
+import com.sparta.bobdoduk.auth.security.UserDetailsImpl;
 import com.sparta.bobdoduk.global.exception.CustomException;
 import com.sparta.bobdoduk.global.exception.ErrorCode;
 import com.sparta.bobdoduk.product.domain.Option;
@@ -34,7 +35,7 @@ public class ProductService {
 
     // 상품 생성
     @Transactional
-    public ProductResponseDTO createProduct(ProductRequestDTO requestDTO) {
+    public ProductResponseDTO createProduct(UserDetailsImpl userDetails, ProductRequestDTO requestDTO) {
 
         UUID product_id = UUID.randomUUID();
 
@@ -45,7 +46,7 @@ public class ProductService {
                 .price(requestDTO.getPrice())
                 .productStatus(requestDTO.getProductStatus())
                 .image(requestDTO.getImage())
-                .createUserId(requestDTO.getCreateUserId())
+                .createUserId(userDetails.getUser().getId())
                 .storeId(requestDTO.getStoreId())
                 .build();
 
@@ -67,7 +68,7 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductResponseDTO updateProduct(UUID productId, ProductRequestDTO requestDTO) {
+    public ProductResponseDTO updateProduct(UserDetailsImpl userDetails, UUID productId, ProductRequestDTO requestDTO) {
 
         Product product = findByProductId(productId);
 
@@ -76,7 +77,7 @@ public class ProductService {
         product.setPrice(requestDTO.getPrice());
         product.setProductStatus(requestDTO.getProductStatus());
         product.setImage(requestDTO.getImage());
-        product.setCreateUserId(requestDTO.getCreateUserId());
+        product.setCreateUserId(userDetails.getUser().getId());
         product.setStoreId(requestDTO.getStoreId());
 
         return ProductResponseDTO.fromEntity(product);
@@ -138,7 +139,7 @@ public class ProductService {
             // Product와 Option을 연결하여 새로운 ProductOption 객체를 생성한다.
             ProductOption productOption = ProductOption.builder()
                     .id(productOption_id)  // 생성한 UUID를 ProductOption의 ID로 설정
-                    .product(product)      // 주어진 Product 객체를 설정
+                    .product(product)// 주어진 Product 객체를 설정
                     .option(option)        // 주어진 Option 객체를 설정
                     .build();              // ProductOption 객체를 빌드하여 생성
 
