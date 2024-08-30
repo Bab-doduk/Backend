@@ -1,5 +1,6 @@
-package com.sparta.bobdoduk.product.dto;
+package com.sparta.bobdoduk.product.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Getter
@@ -9,11 +10,12 @@ import lombok.*;
 @AllArgsConstructor
 public class ProductSearchRequestDTO {
 
+    @NotBlank(message = "검색어를 입력해주세요")
     private String query;
 
     private String sortBy;
 
-    private String order;
+    private String orderBy;
 
     private Integer page;
 
