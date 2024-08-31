@@ -38,14 +38,14 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderProduct> orderProducts;
 
-    public Order(OrderReqDto orderReqDto) {
-        this.userId = orderReqDto.getUserId();
-        this.storeId = orderReqDto.getStoreId();
-        this.orderStatus = orderReqDto.getOrderStatus();
-        this.orderType = orderReqDto.getOrderType();
-        this.totalPrice = orderReqDto.getOrderProducts().stream()
-                .mapToDouble(orderProductDto -> orderProductDto.getPrice() * orderProductDto.getQuantity())
-                .sum();
-    }
+//    public Order(OrderReqDto orderReqDto) {
+//        this.userId = orderReqDto.getUserId();
+//        this.storeId = orderReqDto.getStoreId();
+//        this.orderStatus = orderReqDto.getOrderStatus();
+//        this.orderType = orderReqDto.getOrderType();
+//        this.totalPrice = orderReqDto.getOrderProducts().stream()
+//                .mapToDouble(orderProductDto -> orderProductDto.getPrice() * orderProductDto.getQuantity())
+//                .sum();
+//    }
 
 }
