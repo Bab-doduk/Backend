@@ -89,8 +89,13 @@ public class StoreController {
      * 가게 삭제 (관리자, 가게 주인)
      */
     @DeleteMapping("/{storeId}")
-    public ResponseEntity<ApiResponseDto<Void>> deleteStore(@PathVariable UUID storeId) {
-        storeService.deleteStore(storeId);
+    @PreAuthorize("hasRole('MASTER') or hasRole('OWNER')")
+    public ResponseEntity<ApiResponseDto<Void>> deleteStore(@PathVariable UUID storeId,
+                                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        UUID userId = userDetails.getUser().getId();
+        UserRoleEnum role = userDetails.getUser().getRole();
+
+        storeService.deleteStore(storeId, userId, role);
         return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "가게 삭제 성공", null));
     }
 

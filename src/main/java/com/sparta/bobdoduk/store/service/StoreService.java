@@ -104,10 +104,14 @@ public class StoreService {
 
     // 가게 삭제
     @Transactional
-    public void deleteStore(UUID storeId) {
+    public void deleteStore(UUID storeId, UUID userId, UserRoleEnum role) {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new CustomException(ErrorCode.STORE_NOT_FOUND));
 
+        // OWNER 사용자는 자신의 가게만 삭제 가능
+        if (role == UserRoleEnum.OWNER && !store.getOwnerId().equals(userId)) {
+            throw new CustomException(ErrorCode.STORE_DELETE_UNAUTHORIZED);
+        }
         storeRepository.delete(store);
     }
 
