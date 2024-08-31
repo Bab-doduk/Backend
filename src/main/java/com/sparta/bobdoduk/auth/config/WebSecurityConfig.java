@@ -64,6 +64,9 @@ public class WebSecurityConfig {
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/api/options/**").permitAll()
+                        .requestMatchers("/api/products/**").permitAll()
+                        .requestMatchers("/ai-content").permitAll()
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
 
