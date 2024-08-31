@@ -2,6 +2,8 @@ package com.sparta.bobdoduk.orders.service;
 
 import com.sparta.bobdoduk.auth.domain.User;
 import com.sparta.bobdoduk.auth.domain.UserRoleEnum;
+import com.sparta.bobdoduk.global.exception.CustomException;
+import com.sparta.bobdoduk.global.exception.ErrorCode;
 import com.sparta.bobdoduk.orders.domain.OrderProduct;
 import com.sparta.bobdoduk.orders.repository.OrderProductRepository;
 import com.sparta.bobdoduk.orders.repository.OrderRepository;
@@ -51,7 +53,7 @@ public class OrderService {
                 .map(orderProductDto -> {
                     // Product 객체 조회
                     Product product = productRepository.findById(orderProductDto.getProductId())
-                            .orElseThrow(() -> new RuntimeException("Product not found: " + orderProductDto.getProductId()));
+                            .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
 
                     OrderProduct orderProduct = OrderProduct.builder()
                             .id(UUID.randomUUID())
@@ -76,10 +78,11 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public OrderResDto getOrder(UUID orderId, UUID userId) {
-        Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("해당 주문이 존재하지 않습니다."));
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
 
         if(!order.getUserId().equals(userId)) {
-            throw new RuntimeException("주문 조회할 권한이 없습니다.");
+            throw new CustomException(ErrorCode.USER_MISMATCH);
         }
 
         return OrderResDto.fromEntity(order);
@@ -100,65 +103,15 @@ public class OrderService {
         return orders.map(OrderResDto::fromEntity);
     }
 
-//    @Transactional
-//    public OrderResDto updateOrder(UUID orderId, OrderReqDto orderReqDto) {
-//        Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("해당 주문이 존재하지 않습니다."));
-//
-//        //기존 OrderProducts 아예 삭제
-//        orderProductRepository.deleteAll(order.getOrderProducts());
-//
-//        order.setUserId(orderReqDto.getUserId());
-//        order.setStoreId(orderReqDto.getStoreId());
-//        order.setOrderStatus(orderReqDto.getOrderStatus());
-//        order.setOrderType(orderReqDto.getOrderType());
-//
-//        // 기존 OrderProduct 삭제(orphanremoval=true 로 인해 db상에서도 삭제)
-////        order.getOrderProducts().clear();
-//
-//        // 새로운 OrderProducts 추가
-//        List<OrderProduct> updatedOrderProducts = orderReqDto.getOrderProducts().stream()
-//                .map(orderProductDto -> {
-//                    Product product = productRepository.findById(orderProductDto.getProductId())
-//                            .orElseThrow(() -> new RuntimeException("Product not found: " + orderProductDto.getProductId()));
-//
-//                    // 기존 ID 사용, 없으면 새로운 UUID 생성
-//                    UUID orderProductId = orderProductDto.getId() != null
-//                            ? orderProductDto.getId()
-//                            : UUID.randomUUID();
-//
-//                    return OrderProduct.builder()
-//                            .id(orderProductId)
-//                            .order(order)
-//                            .product(product)
-//                            .quantity(orderProductDto.getQuantity())
-//                            .price(orderProductDto.getPrice())
-//                            .build();
-//                })
-//                .collect(Collectors.toList());
-//
-//        order.setOrderProducts(updatedOrderProducts);
-//
-//        // 수정된 주문 상품 목록을 바탕으로 totalPrice를 다시 계산
-//        Double updatedTotalPrice = updatedOrderProducts.stream()
-//                .mapToDouble(orderProduct -> orderProduct.getPrice() * orderProduct.getQuantity())
-//                .sum();
-//
-//        order.setTotalPrice(updatedTotalPrice);
-//
-//        orderRepository.save(order);
-//        orderProductRepository.saveAll(updatedOrderProducts);
-//
-//        return OrderResDto.fromEntity(order);
-//    }
 
     @Transactional
     public OrderResDto updateOrder(UUID orderId, UUID userId, OrderReqDto orderReqDto) {
         // 기존 주문 조회
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found: " + orderId));
+                .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
 
         if(!order.getUserId().equals(userId)) {
-            throw new RuntimeException("주문 수정할 권한이 없습니다.");
+            throw new CustomException(ErrorCode.USER_MISMATCH);
         }
 
         // totalPrice 계산
@@ -181,7 +134,7 @@ public class OrderService {
                 .map(orderProductDto -> {
                     // Product 객체 조회
                     Product product = productRepository.findById(orderProductDto.getProductId())
-                            .orElseThrow(() -> new RuntimeException("Product not found: " + orderProductDto.getProductId()));
+                            .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
 
                     OrderProduct orderProduct = OrderProduct.builder()
                             .id(UUID.randomUUID()) // 새로운 UUID 생성
@@ -209,10 +162,10 @@ public class OrderService {
     @Transactional
     public void deleteOrder(UUID orderId, UUID userId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found: " + orderId));
+                .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
 
         if(!order.getUserId().equals(userId)) {
-            throw new RuntimeException("주문 수정할 권한이 없습니다.");
+            throw new CustomException(ErrorCode.USER_MISMATCH);
         }
 
         orderRepository.deleteById(orderId);
