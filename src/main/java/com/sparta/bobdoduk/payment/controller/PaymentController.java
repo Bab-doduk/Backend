@@ -1,5 +1,6 @@
 package com.sparta.bobdoduk.payment.controller;
 
+import com.sparta.bobdoduk.auth.domain.UserRoleEnum;
 import com.sparta.bobdoduk.auth.security.UserDetailsImpl;
 import com.sparta.bobdoduk.global.dto.ApiResponseDto;
 import com.sparta.bobdoduk.payment.dto.request.PaymentRequestDto;
@@ -40,8 +41,11 @@ public class PaymentController {
      * 결제 상세 조회
      */
     @GetMapping("/{paymentId}")
-    public ResponseEntity<ApiResponseDto<PaymentResponseDto>> getPayment(@PathVariable UUID paymentId) {
-        PaymentResponseDto payment = paymentService.getPayment(paymentId);
+    public ResponseEntity<ApiResponseDto<PaymentResponseDto>> getPayment(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                                         @PathVariable UUID paymentId) {
+        UUID userId = userDetails.getUser().getId();
+        UserRoleEnum role = userDetails.getUser().getRole();
+        PaymentResponseDto payment = paymentService.getPayment(paymentId, userId, role);
         return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "결제 상세정보 조회 성공", payment));
     }
 

@@ -1,6 +1,7 @@
 package com.sparta.bobdoduk.payment.service;
 
 import com.sparta.bobdoduk.auth.domain.User;
+import com.sparta.bobdoduk.auth.domain.UserRoleEnum;
 import com.sparta.bobdoduk.auth.repository.UserRepository;
 import com.sparta.bobdoduk.global.exception.CustomException;
 import com.sparta.bobdoduk.global.exception.ErrorCode;
@@ -49,10 +50,22 @@ public class PaymentService {
 
     // 결제 상세 조회
     @Transactional(readOnly = true)
-    public PaymentResponseDto getPayment(UUID paymentId) {
-        return paymentRepository.findById(paymentId)
-                .map(PaymentResponseDto::from)
+    public PaymentResponseDto getPayment(UUID paymentId, UUID userId, UserRoleEnum role) {
+        Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PAYMENT_NOT_FOUND));
+
+        User user = payment.getUser();
+
+        // MASTER 권한을 가진 사용자는 모든 결제 내역을 조회 가능
+        if (role == UserRoleEnum.MASTER) {
+            return PaymentResponseDto.from(payment);
+        }
+        // 일반 사용자는 자신이 생성한 결제만 조회 가능
+        if (!payment.getUser().getId().equals(userId)) {
+            throw new CustomException(ErrorCode.PAYMENT_ACCESS_DENIED);
+        }
+
+        return PaymentResponseDto.from(payment);
     }
 
     // 결제 목록 전체 조회 (고객)
