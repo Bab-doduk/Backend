@@ -68,8 +68,14 @@ public class PaymentService {
 
     // 결제 목록 전체 조회 (고객)
     @Transactional(readOnly = true)
-    public Page<PaymentResponseDto> getAllPaymentsCustomer(UUID userId, Pageable pageable) {
-        // 고객 ID에 대한 필터링 로직 필요
+    public Page<PaymentResponseDto> getAllPaymentsCustomer(UUID userId, UserRoleEnum role, Pageable pageable) {
+        // MASTER 권한일 경우, 모든 고객의 결제 목록을 조회
+        if (role == UserRoleEnum.MASTER) {
+            return paymentRepository.findAll(pageable)
+                    .map(PaymentResponseDto::from);
+        }
+
+        // 그 외의 경우, 자신의 결제 목록만 조회
         return paymentRepository.findAllByUser_Id(userId, pageable)
                 .map(PaymentResponseDto::from);
     }

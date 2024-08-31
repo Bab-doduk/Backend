@@ -55,7 +55,8 @@ public class PaymentController {
     @GetMapping("/customer")
     public ResponseEntity<ApiResponseDto<Page<PaymentResponseDto>>> getAllPaymentsCustomer(@AuthenticationPrincipal UserDetailsImpl userDetails, Pageable pageable) {
         UUID userId = userDetails.getUser().getId();
-        Page<PaymentResponseDto> payments = paymentService.getAllPaymentsCustomer(userId, pageable);
+        UserRoleEnum role = userDetails.getUser().getRole();
+        Page<PaymentResponseDto> payments = paymentService.getAllPaymentsCustomer(userId, role, pageable);
         return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "고객 결제 목록 조회 성공", payments));
     }
 
