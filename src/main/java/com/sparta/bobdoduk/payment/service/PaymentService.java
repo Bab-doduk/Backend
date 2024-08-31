@@ -54,8 +54,6 @@ public class PaymentService {
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PAYMENT_NOT_FOUND));
 
-        User user = payment.getUser();
-
         // MASTER 권한을 가진 사용자는 모든 결제 내역을 조회 가능
         if (role == UserRoleEnum.MASTER) {
             return PaymentResponseDto.from(payment);
