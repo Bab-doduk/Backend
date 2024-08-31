@@ -1,5 +1,6 @@
 package com.sparta.bobdoduk.store.service;
 
+import com.sparta.bobdoduk.auth.domain.UserRoleEnum;
 import com.sparta.bobdoduk.global.exception.CustomException;
 import com.sparta.bobdoduk.global.exception.ErrorCode;
 import com.sparta.bobdoduk.store.domain.AreaCategory;
@@ -62,7 +63,7 @@ public class StoreService {
 
     // 가게 등록
     @Transactional
-    public UUID createStore(StoreCreateReqDto request) {
+    public UUID createStore(StoreCreateReqDto request, UUID ownerId) {
         Store store = Store.builder()
                 .name(request.getName())
                 .foodCategory(foodCategoryRepository.findFoodCategoryById(request.getFoodCategoryId()))
@@ -70,7 +71,7 @@ public class StoreService {
                 .description(request.getDescription())
                 .address(request.getAddress())
                 .phoneNumber(request.getPhoneNumber())
-                .ownerId(request.getOwnerId())
+                .ownerId(ownerId)
                 .build();
 
         Store savedStore = storeRepository.save(store);

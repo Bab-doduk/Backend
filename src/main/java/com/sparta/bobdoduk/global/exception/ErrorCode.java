@@ -9,6 +9,7 @@ public enum ErrorCode {
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
     STORE_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 가게입니다"),
+    STORE_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "가게 생성 권한이 없습니다."),
     FOOD_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 음식 카테고리가 존재하지 않습니다."),
     AREA_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 지역 카테고리가 존재하지 않습니다."),
     REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰를 찾을 수 없습니다."),

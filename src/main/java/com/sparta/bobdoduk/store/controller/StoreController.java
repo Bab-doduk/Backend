@@ -1,6 +1,10 @@
 package com.sparta.bobdoduk.store.controller;
 
+import com.sparta.bobdoduk.auth.domain.UserRoleEnum;
+import com.sparta.bobdoduk.auth.security.UserDetailsImpl;
 import com.sparta.bobdoduk.global.dto.ApiResponseDto;
+import com.sparta.bobdoduk.global.exception.CustomException;
+import com.sparta.bobdoduk.global.exception.ErrorCode;
 import com.sparta.bobdoduk.store.domain.Store;
 import com.sparta.bobdoduk.store.dto.request.StoreCreateReqDto;
 import com.sparta.bobdoduk.store.dto.request.StoreSearchDto;
@@ -18,6 +22,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,11 +57,15 @@ public class StoreController {
     }
 
     /**
-     * 가게 등록 (관리자, 가게 주인)
+     * 가게 등록 (가게 주인)
      */
     @PostMapping
-    public ResponseEntity<ApiResponseDto<UUID>> createStore(@RequestBody StoreCreateReqDto request) {
-        UUID storeId = storeService.createStore(request);
+    @PreAuthorize("hasRole('OWNER')")
+    public ResponseEntity<ApiResponseDto<UUID>> createStore(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                            @RequestBody StoreCreateReqDto request) {
+        UUID userId = userDetails.getUser().getId();
+        UUID storeId = storeService.createStore(request, userId);
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ApiResponseDto<>(HttpStatus.CREATED, "가게 등록 성공", storeId));
     }

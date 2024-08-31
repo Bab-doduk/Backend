@@ -31,6 +31,4 @@ public class StoreCreateReqDto {
     @NotBlank(message = "가게 전화번호는 필수입니다.")
     private String phoneNumber;
 
-    @NotNull(message = "가게 주인 ID는 필수입니다.")
-    private UUID ownerId;
 }
