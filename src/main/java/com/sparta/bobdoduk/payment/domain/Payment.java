@@ -1,6 +1,7 @@
 package com.sparta.bobdoduk.payment.domain;
 
 import com.sparta.bobdoduk.auth.domain.User;
+import com.sparta.bobdoduk.global.entity.BaseEntity;
 import com.sparta.bobdoduk.store.domain.Store;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -14,7 +15,7 @@ import java.math.BigDecimal;
 @Table(name = "p_payments")
 @Getter
 @NoArgsConstructor
-public class Payment {
+public class Payment extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
