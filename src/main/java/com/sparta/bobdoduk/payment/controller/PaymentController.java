@@ -64,6 +64,7 @@ public class PaymentController {
      * 결제 목록 전체 조회 (가게)
      */
     @GetMapping("/store")
+    @PreAuthorize("hasRole('OWNER') or hasRole('MANAGER') or hasRole('MASTER')")
     public ResponseEntity<ApiResponseDto<Page<PaymentResponseDto>>> getAllPaymentsForStore(@AuthenticationPrincipal UserDetailsImpl userDetails, Pageable pageable) {
         UUID ownerId = userDetails.getUser().getId();
         UserRoleEnum role = userDetails.getUser().getRole();
