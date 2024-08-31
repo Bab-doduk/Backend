@@ -82,7 +82,13 @@ public class PaymentService {
 
     // 결제 목록 전체 조회 (가게)
     @Transactional(readOnly = true)
-    public Page<PaymentResponseDto> getAllPaymentsStore(UUID ownerId, Pageable pageable) {
+    public Page<PaymentResponseDto> getAllPaymentsStore(UUID ownerId, UserRoleEnum role, Pageable pageable) {
+        // MASTER 권한일 경우, 모든 상점의 결제 목록을 조회
+        if (role == UserRoleEnum.MASTER) {
+            return paymentRepository.findAll(pageable)
+                    .map(PaymentResponseDto::from);
+        }
+
         return paymentRepository.findAllByStore_OwnerId(ownerId, pageable)
                 .map(PaymentResponseDto::from);
     }
