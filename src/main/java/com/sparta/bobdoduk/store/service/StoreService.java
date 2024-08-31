@@ -80,9 +80,14 @@ public class StoreService {
 
     // 가게 수정
     @Transactional
-    public void updateStore(UUID storeId, StoreUpdateRequestDto request) {
+    public void updateStore(UUID storeId, StoreUpdateRequestDto request, UUID userId, UserRoleEnum role) {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new CustomException(ErrorCode.STORE_NOT_FOUND));
+
+        // OWNER 사용자는 자신의 가게만 수정 가능
+        if (role == UserRoleEnum.OWNER && !store.getOwnerId().equals(userId)) {
+            throw new CustomException(ErrorCode.STORE_UPDATE_UNAUTHORIZED);
+        }
 
         FoodCategory foodCategory = foodCategoryRepository.findFoodCategoryById(request.getFoodCategoryId());
         AreaCategory areaCategory = areaCategoryRepository.findAreaCategoryById(request.getAreaCategoryId());

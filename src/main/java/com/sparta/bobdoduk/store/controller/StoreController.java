@@ -74,9 +74,14 @@ public class StoreController {
      * 가게 수정 (관리자, 가게 주인)
      */
     @PutMapping("/{storeId}")
+    @PreAuthorize("hasRole('MASTER') or hasRole('OWNER')")
     public ResponseEntity<ApiResponseDto<Void>> updateStore(@PathVariable UUID storeId,
-                                                            @RequestBody StoreUpdateRequestDto request) {
-        storeService.updateStore(storeId, request);
+                                                            @RequestBody StoreUpdateRequestDto request,
+                                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        UUID userId = userDetails.getUser().getId();
+        UserRoleEnum role = userDetails.getUser().getRole();
+
+        storeService.updateStore(storeId, request, userId, role);
         return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "가게 수정 성공", null));
     }
 
