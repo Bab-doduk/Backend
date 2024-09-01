@@ -47,7 +47,7 @@ public class NoticeController {
     }
 
     // 공지사항 수정
-    @PutMapping("/{noticeId}")
+    @PatchMapping("/{noticeId}")
     public ResponseEntity<ApiResponseDto<NoticeResDto>> updateNotice(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable UUID noticeId,
