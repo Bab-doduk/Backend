@@ -5,10 +5,13 @@ import com.sparta.bobdoduk.global.exception.CustomException;
 import com.sparta.bobdoduk.global.exception.ErrorCode;
 import com.sparta.bobdoduk.review.domain.Report;
 import com.sparta.bobdoduk.review.domain.Review;
+import com.sparta.bobdoduk.review.dto.response.ReportListResponseDto;
 import com.sparta.bobdoduk.review.dto.response.ReportResponseDto;
 import com.sparta.bobdoduk.review.repository.ReportRepository;
 import com.sparta.bobdoduk.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,5 +57,22 @@ public class ReportService {
         reportRepository.delete(report);
     }
 
+    // 모든 리뷰 신고 목록 조회
+    @Transactional(readOnly = true)
+    public Page<ReportListResponseDto> getAllReports(Pageable pageable) {
+        Page<Report> reports = reportRepository.findAll(pageable);
 
+        Page<ReportListResponseDto> reportDtos = reports.map(report -> {
+            Review review = report.getReview();
+            return ReportListResponseDto.builder()
+                    .reportId(report.getReportId())
+                    .reviewId(review.getReviewId())
+                    .userId(review.getUser().getId()) // 리뷰 작성자 ID (신고한 사용자 ID)
+                    .isReported(report.getIsReported())
+                    .reportMessage(report.getReportMessage())
+                    .build();
+        });
+
+        return reportDtos;
+    }
 }
