@@ -35,4 +35,13 @@ public class ReviewController {
                 .body(new ApiResponseDto<>(HttpStatus.CREATED, "리뷰 생성 성공", reviewDto));
     }
 
+    /**
+     * 상세 리뷰 조회
+     */
+    @GetMapping("/{reviewId}")
+    public ResponseEntity<ApiResponseDto<ReviewResponseDto>> getReview(@PathVariable UUID reviewId) {
+        ReviewResponseDto reviewDto = reviewService.getReview(reviewId);
+        return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "상세 리뷰 조회 성공", reviewDto));
+    }
+
 }

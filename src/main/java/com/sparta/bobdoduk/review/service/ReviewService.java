@@ -52,13 +52,16 @@ public class ReviewService {
         // 평균 평점 업데이트 로직
         updateAverageRating(store, createDto.getRating());
 
-        return ReviewResponseDto.builder()
-                .reviewId(review.getReviewId())
-                .storeId(createDto.getStoreId())
-                .userId(userId)
-                .rating(createDto.getRating())
-                .comment(createDto.getComment())
-                .build();
+        return ReviewResponseDto.from(review);
+    }
+
+    // 상세 리뷰 조회
+    @Transactional(readOnly = true)
+    public ReviewResponseDto getReview(UUID reviewId) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new CustomException(ErrorCode.REVIEW_NOT_FOUND));
+
+        return ReviewResponseDto.from(review);
     }
 
     // ================ 메서드 ================
