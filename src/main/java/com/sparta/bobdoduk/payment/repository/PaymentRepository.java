@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface PaymentRepository extends JpaRepository<Payment, UUID> {
+public interface PaymentRepository extends JpaRepository<Payment, UUID>, PaymentRepositoryCustom {
     Page<Payment> findAllByUser_Id(UUID userId, Pageable pageable);
 
     // Store의 ownerId로 결제 목록 조회

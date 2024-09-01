@@ -1,6 +1,7 @@
 package com.sparta.bobdoduk.orders.domain;
 
 import com.sparta.bobdoduk.orders.dto.OrderReqDto;
+import com.sparta.bobdoduk.payment.domain.Payment;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,6 +35,9 @@ public class Order {
 
     @Column(name = "total_price")
     private Double totalPrice;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Payment> payments;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderProduct> orderProducts;

@@ -1,5 +1,6 @@
 package com.sparta.bobdoduk.store.domain;
 
+import com.sparta.bobdoduk.auth.domain.User;
 import com.sparta.bobdoduk.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import java.util.UUID;
@@ -13,7 +14,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @Table(name = "p_stores")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Store {
+public class Store extends BaseEntity {
 
     @Id
     @GeneratedValue
@@ -40,18 +41,19 @@ public class Store {
     @Column(name = "phone_number", length = 20, nullable = false)
     private String phoneNumber;
 
-    @Column(name = "owner_id", nullable = false)
-    private UUID ownerId;
+    @ManyToOne
+    @JoinColumn(name = "owner_id", nullable = false)
+    private User owner;
 
     @Builder
-    public Store(String name, FoodCategory foodCategory, AreaCategory areaCategory, String description, String address, String phoneNumber, UUID ownerId) {
+    public Store(String name, FoodCategory foodCategory, AreaCategory areaCategory, String description, String address, String phoneNumber, User owner) {
         this.name = name;
         this.foodCategory = foodCategory;
         this.areaCategory = areaCategory;
         this.description = description;
         this.address = address;
         this.phoneNumber = phoneNumber;
-        this.ownerId = ownerId;
+        this.owner = owner;
     }
 
     public void update(String name, FoodCategory foodCategory, AreaCategory areaCategory, String description, String address, String phoneNumber) {

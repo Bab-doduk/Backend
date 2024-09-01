@@ -5,14 +5,18 @@ import com.sparta.bobdoduk.auth.domain.UserRoleEnum;
 import com.sparta.bobdoduk.auth.repository.UserRepository;
 import com.sparta.bobdoduk.global.exception.CustomException;
 import com.sparta.bobdoduk.global.exception.ErrorCode;
+import com.sparta.bobdoduk.orders.domain.Order;
+import com.sparta.bobdoduk.orders.repository.OrderRepository;
 import com.sparta.bobdoduk.payment.domain.Payment;
 import com.sparta.bobdoduk.payment.dto.request.PaymentRequestDto;
+import com.sparta.bobdoduk.payment.dto.request.PaymentSearchDto;
 import com.sparta.bobdoduk.payment.dto.response.PaymentResponseDto;
 import com.sparta.bobdoduk.payment.repository.PaymentRepository;
 import com.sparta.bobdoduk.store.domain.Store;
 import com.sparta.bobdoduk.store.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,18 +31,20 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final StoreRepository storeRepository;
     private final UserRepository userRepository;
+    private final OrderRepository orderRepository;
 
     // 결제 생성 (유저, 가게주인, 마스터)
     @Transactional
     public PaymentResponseDto createPayment(PaymentRequestDto request, UUID userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-
         Store store = storeRepository.findById(request.getStoreId())
                 .orElseThrow(() -> new CustomException(ErrorCode.STORE_NOT_FOUND));
+        Order order = orderRepository.findById(request.getOrderId())
+                .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
 
         Payment payment = Payment.builder()
-                .orderId(request.getOrderId())
+                .order(order)
                 .paymentMethod(request.getPaymentMethod())
                 .price(request.getPrice())
                 .user(user)
@@ -99,4 +105,27 @@ public class PaymentService {
         return paymentRepository.findAll(pageable)
                 .map(PaymentResponseDto::from);
     }
+
+    // 결제 검색 (관리자용)
+    @Transactional(readOnly = true)
+    public Page<PaymentResponseDto> searchPayments(PaymentSearchDto searchDto, Pageable pageable) {
+        return paymentRepository.searchPayments(searchDto, pageable)
+                .map(PaymentResponseDto::from);
+    }
+
+    // 결제 취소
+    @Transactional
+    public void cancelPayment(UUID paymentId, UUID ownerId, UserRoleEnum role) {
+        Payment payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PAYMENT_NOT_FOUND));
+
+        // MASTER 사용자는 모든 결제 취소 가능, OWNER 사용자는 자신의 가게 결제만 취소 가능
+        if (role == UserRoleEnum.MASTER || (role == UserRoleEnum.OWNER && payment.getStore().getOwner().getId().equals(ownerId))) {
+            payment.cancel();
+            paymentRepository.save(payment);
+        } else {
+            throw new CustomException(ErrorCode.PAYMENT_ACCESS_DENIED);
+        }
+    }
+
 }
