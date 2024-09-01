@@ -45,4 +45,14 @@ public class ReportService {
                 .orElseThrow(() -> new CustomException(ErrorCode.REPORT_NOT_FOUND));
         return ReportResponseDto.from(report, report.getReview().getUser().getId());
     }
+
+    // 리뷰 삭제
+    @Transactional
+    public void deleteReport(UUID reportId) {
+        Report report = reportRepository.findById(reportId)
+                .orElseThrow(() -> new CustomException(ErrorCode.REPORT_NOT_FOUND));
+        reportRepository.delete(report);
+    }
+
+
 }

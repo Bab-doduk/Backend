@@ -37,7 +37,7 @@ public class ReportController {
     }
 
     /**
-     * 특정 리뷰 신고 조회
+     * 특정 리뷰 신고 조회 (관리자)
      */
     @GetMapping("/{reportId}")
     @PreAuthorize("hasRole('MASTER')")
@@ -45,4 +45,17 @@ public class ReportController {
         ReportResponseDto reportDto = reportService.getReport(reportId);
         return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "신고 조회 성공", reportDto));
     }
+
+    /**
+     * 리뷰 신고 삭제 (관리자)
+     */
+    @DeleteMapping("/{reportId}")
+    @PreAuthorize("hasRole('MASTER')")
+    public ResponseEntity<ApiResponseDto<Void>> deleteReport(@PathVariable UUID reportId) {
+        reportService.deleteReport(reportId);
+        return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "신고 삭제 성공", null));
+    }
+
+
+
 }
