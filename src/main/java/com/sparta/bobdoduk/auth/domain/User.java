@@ -1,6 +1,6 @@
 package com.sparta.bobdoduk.auth.domain;
 
-import com.sparta.bobdoduk.Auditing;
+import com.sparta.bobdoduk.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Table(name = "p_users")
-public class User extends Auditing {
+public class User extends BaseEntity {
     @Id
     private UUID id;
     @Column(nullable = false, unique = true)

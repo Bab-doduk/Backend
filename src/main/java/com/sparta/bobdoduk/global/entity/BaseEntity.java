@@ -1,7 +1,7 @@
 package com.sparta.bobdoduk.global.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.Data;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -9,9 +9,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
-@Getter
+@Data
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
@@ -47,6 +46,15 @@ public abstract class BaseEntity {
     @PreUpdate
     public void preUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+    public boolean isDeletedSoftly() {
+        return deletedAt != null;
+    }
+
+    public void undoDelete() {
+        this.deletedBy = null;
+        this.deletedAt = null;
     }
 
 }

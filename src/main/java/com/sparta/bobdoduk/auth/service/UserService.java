@@ -75,8 +75,8 @@ public class UserService {
 
     public void deleteUserInfo(UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
-        user.setDeleted_at(LocalDateTime.now());
-        user.setDeleted_by(userDetails.getUsername());
+        user.setDeletedAt(LocalDateTime.now());
+        user.setDeletedBy(userDetails.getUsername());
 
         userRepository.save(user);
     }
