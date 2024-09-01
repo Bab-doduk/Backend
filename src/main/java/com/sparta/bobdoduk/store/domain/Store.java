@@ -2,17 +2,19 @@ package com.sparta.bobdoduk.store.domain;
 
 import com.sparta.bobdoduk.auth.domain.User;
 import com.sparta.bobdoduk.global.entity.BaseEntity;
+import com.sparta.bobdoduk.review.domain.Review;
 import jakarta.persistence.*;
+
+import java.util.List;
 import java.util.UUID;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Getter
 @Entity
 @Table(name = "p_stores")
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Store extends BaseEntity {
 
@@ -45,6 +47,9 @@ public class Store extends BaseEntity {
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
+    @Column(name = "average_rating")
+    private Double averageRating = 0.0; // 평균 평점
+
     @Builder
     public Store(String name, FoodCategory foodCategory, AreaCategory areaCategory, String description, String address, String phoneNumber, User owner) {
         this.name = name;
@@ -54,6 +59,7 @@ public class Store extends BaseEntity {
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.owner = owner;
+        this.averageRating = 0.0; // 초기 평균 평점
     }
 
     public void update(String name, FoodCategory foodCategory, AreaCategory areaCategory, String description, String address, String phoneNumber) {
@@ -63,6 +69,24 @@ public class Store extends BaseEntity {
         this.description = description;
         this.address = address;
         this.phoneNumber = phoneNumber;
+    }
+
+    // 평균 평점 계산 메서드
+    public void calculateAverageRating(List<Review> reviews) {
+        if (reviews.isEmpty()) {
+            this.averageRating = 0.0;
+        } else {
+            double totalRating = reviews.stream()
+                    .filter(review -> review.getReport() == null || !review.getReport().getIsReported())
+                    .mapToDouble(Review::getRating)
+                    .sum();
+            this.averageRating = totalRating / reviews.size();
+        }
+    }
+
+    // 새로운 평균 평점 저장
+    public void setAverageRating(double averageRating) {
+        this.averageRating = averageRating;
     }
 
 }
