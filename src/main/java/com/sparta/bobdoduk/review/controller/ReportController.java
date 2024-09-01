@@ -8,11 +8,9 @@ import com.sparta.bobdoduk.review.service.ReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -36,5 +34,15 @@ public class ReportController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ApiResponseDto<>(HttpStatus.CREATED, "리뷰 신고 성공", reportDto));
+    }
+
+    /**
+     * 특정 리뷰 신고 조회
+     */
+    @GetMapping("/{reportId}")
+    @PreAuthorize("hasRole('MASTER')")
+    public ResponseEntity<ApiResponseDto<ReportResponseDto>> getReport(@PathVariable UUID reportId) {
+        ReportResponseDto reportDto = reportService.getReport(reportId);
+        return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "신고 조회 성공", reportDto));
     }
 }

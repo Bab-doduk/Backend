@@ -37,4 +37,12 @@ public class ReportService {
 
         return ReportResponseDto.from(report, userId);
     }
+
+    // 특정 리뷰 신고 조회
+    @Transactional(readOnly = true)
+    public ReportResponseDto getReport(UUID reportId) {
+        Report report = reportRepository.findById(reportId)
+                .orElseThrow(() -> new CustomException(ErrorCode.REPORT_NOT_FOUND));
+        return ReportResponseDto.from(report, report.getReview().getUser().getId());
+    }
 }
