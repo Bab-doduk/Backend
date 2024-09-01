@@ -3,8 +3,10 @@ package com.sparta.bobdoduk.review.controller;
 import com.sparta.bobdoduk.auth.domain.UserRoleEnum;
 import com.sparta.bobdoduk.auth.security.UserDetailsImpl;
 import com.sparta.bobdoduk.global.dto.ApiResponseDto;
+import com.sparta.bobdoduk.review.dto.request.ReportRequestDto;
 import com.sparta.bobdoduk.review.dto.request.ReviewCreateDto;
 import com.sparta.bobdoduk.review.dto.request.ReviewUpdateDto;
+import com.sparta.bobdoduk.review.dto.response.ReportResponseDto;
 import com.sparta.bobdoduk.review.dto.response.ReviewResponseDto;
 import com.sparta.bobdoduk.review.service.ReviewService;
 import lombok.RequiredArgsConstructor;
@@ -79,7 +81,5 @@ public class ReviewController {
         reviewService.deleteReview(reviewId, userId, role);
         return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "리뷰 삭제 성공", null));
     }
-
-
 
 }
