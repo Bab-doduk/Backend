@@ -1,6 +1,7 @@
 package com.sparta.bobdoduk.review.service;
 
 import com.sparta.bobdoduk.auth.domain.User;
+import com.sparta.bobdoduk.auth.domain.UserRoleEnum;
 import com.sparta.bobdoduk.auth.repository.UserRepository;
 import com.sparta.bobdoduk.global.exception.CustomException;
 import com.sparta.bobdoduk.global.exception.ErrorCode;
@@ -9,6 +10,7 @@ import com.sparta.bobdoduk.orders.domain.OrderStatus;
 import com.sparta.bobdoduk.orders.repository.OrderRepository;
 import com.sparta.bobdoduk.review.domain.Review;
 import com.sparta.bobdoduk.review.dto.request.ReviewCreateDto;
+import com.sparta.bobdoduk.review.dto.request.ReviewUpdateDto;
 import com.sparta.bobdoduk.review.dto.response.ReviewResponseDto;
 import com.sparta.bobdoduk.review.repository.ReviewRepository;
 import com.sparta.bobdoduk.store.domain.Store;
@@ -62,6 +64,19 @@ public class ReviewService {
                 .orElseThrow(() -> new CustomException(ErrorCode.REVIEW_NOT_FOUND));
 
         return ReviewResponseDto.from(review);
+    }
+
+    // 리뷰 수정
+    @Transactional
+    public void updateReview(UUID reviewId, UUID userId, ReviewUpdateDto updateDto, UserRoleEnum role) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new CustomException(ErrorCode.REVIEW_NOT_FOUND));
+
+        // 권한 체크
+        if (!review.getUser().getId().equals(userId) && role != UserRoleEnum.MASTER) {
+            throw new CustomException(ErrorCode.REVIEW_UPDATE_UNAUTHORIZED);
+        }
+        review.updateReview(updateDto.getRating(), updateDto.getComment());
     }
 
     // ================ 메서드 ================

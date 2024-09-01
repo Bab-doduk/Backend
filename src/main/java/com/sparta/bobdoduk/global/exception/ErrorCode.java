@@ -15,6 +15,8 @@ public enum ErrorCode {
     FOOD_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 음식 카테고리가 존재하지 않습니다."),
     AREA_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 지역 카테고리가 존재하지 않습니다."),
     REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰를 찾을 수 없습니다."),
+    REVIEW_UPDATE_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "리뷰 수정 권한이 없습니다."),
+    REVIEW_DELETE_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "리뷰 삭제 권한이 없습니다."),
     PAYMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "결제 내역을 찾을 수 없습니다."),
     PAYMENT_ACCESS_DENIED(HttpStatus.FORBIDDEN, "해당 결제 내역에 접근할 수 없습니다."),
     PAYMENT_ALREADY_CANCELLED(HttpStatus.BAD_REQUEST, "이미 취소된 결제입니다."),
