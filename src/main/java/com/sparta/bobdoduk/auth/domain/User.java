@@ -6,9 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.Where;
 
 import java.util.UUID;
 
+@Where(clause = "deleted_at is null")
 @Entity
 @Data
 @Builder

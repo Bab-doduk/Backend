@@ -10,10 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -43,5 +40,11 @@ public class userController {
     public ResponseEntity<UserInfoDto> updateUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                       @RequestBody UpdateUserInfoDto userInfo) {
         return ResponseEntity.ok(userService.updateUserInfo(userDetails,userInfo));
+    }
+
+    @DeleteMapping("/user")
+    public ResponseEntity<String> deleteUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        userService.deleteUserInfo(userDetails);
+        return ResponseEntity.ok("Delete user " + userDetails.getUsername());
     }
 }

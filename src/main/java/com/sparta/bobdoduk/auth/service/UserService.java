@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -70,6 +71,14 @@ public class UserService {
         userRepository.save(user);
 
         return UserInfoDto.fromEntity(user);
+    }
+
+    public void deleteUserInfo(UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+        user.setDeleted_at(LocalDateTime.now());
+        user.setDeleted_by(userDetails.getUsername());
+
+        userRepository.save(user);
     }
 
     @Builder
