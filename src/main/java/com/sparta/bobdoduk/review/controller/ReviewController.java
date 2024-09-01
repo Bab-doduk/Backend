@@ -27,10 +27,8 @@ public class ReviewController {
      * 리뷰 생성 (주문 완료 후 고객)
      */
     @PostMapping("/create")
-    public ResponseEntity<ApiResponseDto<ReviewResponseDto>> createReview(
-            @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @RequestBody ReviewCreateDto createDto) {
-
+    public ResponseEntity<ApiResponseDto<ReviewResponseDto>> createReview(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                                          @RequestBody ReviewCreateDto createDto) {
         UUID userId = userDetails.getUser().getId();
         ReviewResponseDto reviewDto = reviewService.createReview(createDto, userId);
 
