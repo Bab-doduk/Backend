@@ -5,14 +5,18 @@ import com.sparta.bobdoduk.auth.domain.UserRoleEnum;
 import com.sparta.bobdoduk.auth.repository.UserRepository;
 import com.sparta.bobdoduk.global.exception.CustomException;
 import com.sparta.bobdoduk.global.exception.ErrorCode;
+import com.sparta.bobdoduk.orders.domain.Order;
+import com.sparta.bobdoduk.orders.repository.OrderRepository;
 import com.sparta.bobdoduk.payment.domain.Payment;
 import com.sparta.bobdoduk.payment.dto.request.PaymentRequestDto;
+import com.sparta.bobdoduk.payment.dto.request.PaymentSearchDto;
 import com.sparta.bobdoduk.payment.dto.response.PaymentResponseDto;
 import com.sparta.bobdoduk.payment.repository.PaymentRepository;
 import com.sparta.bobdoduk.store.domain.Store;
 import com.sparta.bobdoduk.store.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,14 +38,13 @@ public class PaymentService {
     public PaymentResponseDto createPayment(PaymentRequestDto request, UUID userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-
         Store store = storeRepository.findById(request.getStoreId())
                 .orElseThrow(() -> new CustomException(ErrorCode.STORE_NOT_FOUND));
         Order order = orderRepository.findById(request.getOrderId())
                 .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
 
         Payment payment = Payment.builder()
-                .orderId(request.getOrderId())
+                .order(order)
                 .paymentMethod(request.getPaymentMethod())
                 .price(request.getPrice())
                 .user(user)
@@ -100,6 +103,13 @@ public class PaymentService {
     @Transactional(readOnly = true)
     public Page<PaymentResponseDto> getAllPayments(Pageable pageable) {
         return paymentRepository.findAll(pageable)
+                .map(PaymentResponseDto::from);
+    }
+
+    // 가게 검색
+    @Transactional(readOnly = true)
+    public Page<PaymentResponseDto> searchPayments(PaymentSearchDto searchDto, Pageable pageable) {
+        return paymentRepository.searchPayments(searchDto, pageable)
                 .map(PaymentResponseDto::from);
     }
 }
