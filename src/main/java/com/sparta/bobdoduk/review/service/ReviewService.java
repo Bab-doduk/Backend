@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -64,6 +65,16 @@ public class ReviewService {
                 .orElseThrow(() -> new CustomException(ErrorCode.REVIEW_NOT_FOUND));
 
         return ReviewResponseDto.from(review);
+    }
+
+    // 특정 가게의 전체 리뷰 조회
+    @Transactional(readOnly = true)
+    public List<ReviewResponseDto> getReviewsByStore(UUID storeId) {
+        // 가게에 대한 리뷰 목록 조회 (신고된 리뷰 제외)
+        List<Review> reviews = reviewRepository.findByStore_StoreIdAndReport_IsReportedFalse(storeId);
+        return reviews.stream()
+                .map(ReviewResponseDto::from)
+                .collect(Collectors.toList());
     }
 
     // 리뷰 수정

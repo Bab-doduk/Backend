@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -43,6 +44,15 @@ public class ReviewController {
     public ResponseEntity<ApiResponseDto<ReviewResponseDto>> getReview(@PathVariable UUID reviewId) {
         ReviewResponseDto reviewDto = reviewService.getReview(reviewId);
         return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "상세 리뷰 조회 성공", reviewDto));
+    }
+
+    /**
+     * 특정 가게의 전체 리뷰 조회
+     */
+    @GetMapping("/store/{storeId}")
+    public ResponseEntity<ApiResponseDto<List<ReviewResponseDto>>> getReviewsByStore(@PathVariable UUID storeId) {
+        List<ReviewResponseDto> reviewDtos = reviewService.getReviewsByStore(storeId);
+        return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "전체 리뷰 목록 조회 성공", reviewDtos));
     }
 
     /**
