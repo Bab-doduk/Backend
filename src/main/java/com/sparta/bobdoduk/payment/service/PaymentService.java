@@ -106,10 +106,26 @@ public class PaymentService {
                 .map(PaymentResponseDto::from);
     }
 
-    // 가게 검색
+    // 결제 검색 (관리자용)
     @Transactional(readOnly = true)
     public Page<PaymentResponseDto> searchPayments(PaymentSearchDto searchDto, Pageable pageable) {
         return paymentRepository.searchPayments(searchDto, pageable)
                 .map(PaymentResponseDto::from);
     }
+
+    // 결제 취소
+    @Transactional
+    public void cancelPayment(UUID paymentId, UUID ownerId, UserRoleEnum role) {
+        Payment payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PAYMENT_NOT_FOUND));
+
+        // MASTER 사용자는 모든 결제 취소 가능, OWNER 사용자는 자신의 가게 결제만 취소 가능
+        if (role == UserRoleEnum.MASTER || (role == UserRoleEnum.OWNER && payment.getStore().getOwner().getId().equals(ownerId))) {
+            payment.cancel();
+            paymentRepository.save(payment);
+        } else {
+            throw new CustomException(ErrorCode.PAYMENT_ACCESS_DENIED);
+        }
+    }
+
 }

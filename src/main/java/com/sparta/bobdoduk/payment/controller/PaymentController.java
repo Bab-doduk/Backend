@@ -123,6 +123,19 @@ public class PaymentController {
         return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "결제 검색 성공", payments));
     }
 
+    /**
+     * 결제 취소 (가게 주인, 관리자)
+     */
+    @DeleteMapping("/{paymentId}")
+    @PreAuthorize("hasRole('OWNER') or hasRole('MASTER')")
+    public ResponseEntity<ApiResponseDto<Void>> cancelPayment(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                              @PathVariable UUID paymentId) {
+        UUID ownerId = userDetails.getUser().getId();
+        UserRoleEnum role = userDetails.getUser().getRole();
+        paymentService.cancelPayment(paymentId, ownerId, role);
+
+        return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "결제 취소 성공", null));
+    }
 
 
 }

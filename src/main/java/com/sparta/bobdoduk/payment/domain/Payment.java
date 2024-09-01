@@ -2,6 +2,8 @@ package com.sparta.bobdoduk.payment.domain;
 
 import com.sparta.bobdoduk.auth.domain.User;
 import com.sparta.bobdoduk.global.entity.BaseEntity;
+import com.sparta.bobdoduk.global.exception.CustomException;
+import com.sparta.bobdoduk.global.exception.ErrorCode;
 import com.sparta.bobdoduk.orders.domain.Order;
 import com.sparta.bobdoduk.store.domain.Store;
 import jakarta.persistence.*;
@@ -60,4 +62,12 @@ public class Payment extends BaseEntity {
     }
 
     public UUID getOrderId() { return this.order.getOrderId();}
+
+    // 결제 상태 취소
+    public void cancel() {
+        if (this.status == PaymentStatus.CANCELLED) {
+            throw new CustomException(ErrorCode.PAYMENT_ALREADY_CANCELLED);
+        }
+        this.status = PaymentStatus.CANCELLED;
+    }
 }
