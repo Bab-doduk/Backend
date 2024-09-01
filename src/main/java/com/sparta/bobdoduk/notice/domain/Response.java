@@ -14,8 +14,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "p_inquiry_responses")
-public class InquiryResponse {
+@Table(name = "p_responses")
+public class Response {
     @Id
     private UUID id;
 

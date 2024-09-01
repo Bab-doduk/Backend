@@ -9,8 +9,8 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class InquiryResDto {
-    private UUID inquiryId;
+public class ResponseResDto {
+    private UUID responseId;
     private UUID userId;
     private String title;
     private String content;
