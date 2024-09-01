@@ -2,6 +2,7 @@ package com.sparta.bobdoduk.payment.domain;
 
 import com.sparta.bobdoduk.auth.domain.User;
 import com.sparta.bobdoduk.global.entity.BaseEntity;
+import com.sparta.bobdoduk.orders.domain.Order;
 import com.sparta.bobdoduk.store.domain.Store;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -21,8 +22,9 @@ public class Payment extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID paymentId;
 
-    @Column(nullable = false)
-    private UUID orderId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -44,8 +46,8 @@ public class Payment extends BaseEntity {
     private Store store;
 
     @Builder
-    public Payment(UUID orderId, PaymentMethod paymentMethod, BigDecimal price, PaymentStatus status, User user, Store store) {
-        this.orderId = orderId;
+    public Payment(Order order, PaymentMethod paymentMethod, BigDecimal price, PaymentStatus status, User user, Store store) {
+        this.order = order;
         this.paymentMethod = paymentMethod;
         this.price = price;
         this.status = status != null ? status : PaymentStatus.PENDING;
@@ -57,4 +59,5 @@ public class Payment extends BaseEntity {
         return this.user.getId();
     }
 
+    public UUID getOrderId() { return this.order.getOrderId();}
 }

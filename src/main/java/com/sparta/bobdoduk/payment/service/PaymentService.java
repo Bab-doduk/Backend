@@ -27,6 +27,7 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final StoreRepository storeRepository;
     private final UserRepository userRepository;
+    private final OrderRepository orderRepository;
 
     // 결제 생성 (유저, 가게주인, 마스터)
     @Transactional
@@ -36,6 +37,8 @@ public class PaymentService {
 
         Store store = storeRepository.findById(request.getStoreId())
                 .orElseThrow(() -> new CustomException(ErrorCode.STORE_NOT_FOUND));
+        Order order = orderRepository.findById(request.getOrderId())
+                .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
 
         Payment payment = Payment.builder()
                 .orderId(request.getOrderId())
