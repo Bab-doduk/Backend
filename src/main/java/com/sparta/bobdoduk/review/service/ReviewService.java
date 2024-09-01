@@ -79,6 +79,18 @@ public class ReviewService {
         review.updateReview(updateDto.getRating(), updateDto.getComment());
     }
 
+    // 리뷰 삭제
+    @Transactional
+    public void deleteReview(UUID reviewId, UUID userId, UserRoleEnum role) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new CustomException(ErrorCode.REVIEW_NOT_FOUND));
+
+        if (!review.getUser().getId().equals(userId) && role != UserRoleEnum.MASTER) {
+            throw new CustomException(ErrorCode.REVIEW_DELETE_UNAUTHORIZED);
+        }
+        reviewRepository.delete(review);
+    }
+
     // ================ 메서드 ================
     private void updateAverageRating(Store store, int newRating) {
         long reviewCount = reviewRepository.countByStoreAndReportIsNull(store); // 신고되지 않은 리뷰 수

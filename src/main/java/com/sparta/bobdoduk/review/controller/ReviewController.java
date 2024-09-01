@@ -58,5 +58,18 @@ public class ReviewController {
         return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "리뷰 수정 성공", null));
     }
 
+    /**
+     * 리뷰 삭제 (작성자, 관리자)
+     */
+    @DeleteMapping("/{reviewId}")
+    public ResponseEntity<ApiResponseDto<Void>> deleteReview(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                             @PathVariable UUID reviewId) {
+        UUID userId = userDetails.getUser().getId();
+        UserRoleEnum role = userDetails.getUser().getRole();
+        reviewService.deleteReview(reviewId, userId, role);
+        return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "리뷰 삭제 성공", null));
+    }
+
+
 
 }
