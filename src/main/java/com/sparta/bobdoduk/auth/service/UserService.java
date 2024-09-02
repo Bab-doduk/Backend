@@ -81,6 +81,26 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public List<UserAllResponseDto> searchUser(String query) {
+        List<UserAllResponseDto> list = new ArrayList<>();
+        List<User> users = switch (query) {
+            case "OWNER" -> userRepository.findAllByRole(UserRoleEnum.OWNER);
+            case "MANAGER" -> userRepository.findAllByRole(UserRoleEnum.MANAGER);
+            case "MASTER" -> userRepository.findAllByRole(UserRoleEnum.MASTER);
+            case "CUSTOMER" -> userRepository.findAllByRole(UserRoleEnum.CUSTOMER);
+            default -> userRepository.findAllByUsernameContaining(query);
+        };
+
+        for (User user : users) {
+            list.add(UserAllResponseDto.builder()
+                    .id(user.getId())
+                    .username(user.getUsername())
+                    .role(user.getRole().toString())
+                    .build());
+        }
+        return list;
+    }
+
     @Builder
     @Data
     public static class UserAllResponseDto {
