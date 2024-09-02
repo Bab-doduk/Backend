@@ -24,10 +24,11 @@ public class ReportService {
 
     private final ReportRepository reportRepository;
     private final ReviewRepository reviewRepository;
+    private final UserRepository userRepository;
 
     // 리뷰 신고 생성
     @Transactional
-    public ReportResponseDto createReport(UUID reviewId, UUID userId, String reportMessage) {
+    public ReportResponseDto createReport(UUID reviewId, UUID reportedById, String reportMessage) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new CustomException(ErrorCode.REVIEW_NOT_FOUND));
 
@@ -46,7 +47,7 @@ public class ReportService {
                 .build();
         report = reportRepository.save(report);
 
-        return ReportResponseDto.from(report, userId);
+        return ReportResponseDto.from(report);
     }
 
     // 특정 리뷰 신고 조회
@@ -54,7 +55,7 @@ public class ReportService {
     public ReportResponseDto getReport(UUID reportId) {
         Report report = reportRepository.findById(reportId)
                 .orElseThrow(() -> new CustomException(ErrorCode.REPORT_NOT_FOUND));
-        return ReportResponseDto.from(report, report.getReview().getUser().getId());
+        return ReportResponseDto.from(report);
     }
 
     // 리뷰 삭제
@@ -82,5 +83,11 @@ public class ReportService {
         });
 
         return reportDtos;
+    }
+
+    // 신고한 사용자 id로 검색
+    @Transactional(readOnly = true)
+    public Page<Report> getReportsByReportedById(UUID reportedById, Pageable pageable) {
+        return reportRepository.findByReportedBy_Id(reportedById, pageable);
     }
 }

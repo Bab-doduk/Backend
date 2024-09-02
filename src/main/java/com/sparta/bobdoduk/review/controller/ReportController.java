@@ -2,6 +2,7 @@ package com.sparta.bobdoduk.review.controller;
 
 import com.sparta.bobdoduk.auth.security.UserDetailsImpl;
 import com.sparta.bobdoduk.global.dto.ApiResponseDto;
+import com.sparta.bobdoduk.review.domain.Report;
 import com.sparta.bobdoduk.review.dto.request.ReportRequestDto;
 import com.sparta.bobdoduk.review.dto.response.ReportListResponseDto;
 import com.sparta.bobdoduk.review.dto.response.ReportResponseDto;
@@ -15,7 +16,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -69,6 +69,18 @@ public class ReportController {
         Page<ReportListResponseDto> reportDtos = reportService.getAllReports(pageable);
 
         return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "전체 신고 목록 조회 성공", reportDtos));
+    }
+
+    /**
+     * 리뷰 신고 검색 (관리자)
+     * 신고한 사용자 ID로 검색
+     */
+    @GetMapping("/search/by-reporter")
+    @PreAuthorize("hasRole('MASTER')")
+    public ResponseEntity<ApiResponseDto<Page<ReportResponseDto>>> getReportsByReportedById(@RequestParam UUID reportedById, Pageable pageable) {
+        Page<Report> reports = reportService.getReportsByReportedById(reportedById, pageable);
+        Page<ReportResponseDto> reportDtos = reports.map(ReportResponseDto::from);
+        return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "리뷰 신고 목록 조회 성공", reportDtos));
     }
 
 
