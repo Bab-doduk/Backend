@@ -68,6 +68,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/options/**").permitAll()
                         .requestMatchers("/api/products/**").permitAll()
                         .requestMatchers("/ai-content").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/stores").permitAll()  // 가게 전체 조회 접근 허용
                         .requestMatchers(HttpMethod.GET, "/api/notices").permitAll() // 공지사항 조회 접근 허용
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
