@@ -1,5 +1,6 @@
 package com.sparta.bobdoduk.review.domain;
 
+import com.sparta.bobdoduk.auth.domain.User;
 import com.sparta.bobdoduk.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -24,6 +25,14 @@ public class Report extends BaseEntity {
     @JoinColumn(name = "review_id", nullable = false)
     private Review review;
 
+    @ManyToOne
+    @JoinColumn(name = "reported_by", nullable = false)
+    private User reportedBy; // 신고한 유저
+
+    @ManyToOne
+    @JoinColumn(name = "reported_user", nullable = false)
+    private User reportedUser; // 신고 당한 유저 (리뷰 작성자)
+
     @Column(name = "is_reported", nullable = false)
     private Boolean isReported; // 신고 여부
 
@@ -31,8 +40,10 @@ public class Report extends BaseEntity {
     private String reportMessage; // 신고 메시지
 
     @Builder
-    public Report(Review review, Boolean isReported, String reportMessage) {
+    public Report(Review review, User reportedBy, User reportedUser, Boolean isReported, String reportMessage) {
         this.review = review;
+        this.reportedBy = reportedBy;
+        this.reportedUser = reportedUser;
         this.isReported = isReported;
         this.reportMessage = reportMessage;
     }
