@@ -1,5 +1,6 @@
 package com.sparta.bobdoduk.review.service;
 
+import com.sparta.bobdoduk.auth.domain.User;
 import com.sparta.bobdoduk.auth.repository.UserRepository;
 import com.sparta.bobdoduk.global.exception.CustomException;
 import com.sparta.bobdoduk.global.exception.ErrorCode;
@@ -30,9 +31,16 @@ public class ReportService {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new CustomException(ErrorCode.REVIEW_NOT_FOUND));
 
+        User reportedBy = userRepository.findById(reportedById)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        User reportedUser = review.getUser();  // 신고 당한 유저는 리뷰 작성자
+
         // 신고 생성 및 저장
         Report report = Report.builder()
                 .review(review)
+                .reportedBy(reportedBy)  // 신고한 사용자 설정
+                .reportedUser(reportedUser)  // 신고 당한 사용자 설정
                 .isReported(true)
                 .reportMessage(reportMessage)
                 .build();

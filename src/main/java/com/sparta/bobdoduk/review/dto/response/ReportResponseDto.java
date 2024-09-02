@@ -16,15 +16,17 @@ public class ReportResponseDto {
 
     private UUID reportId;         // 신고 ID
     private UUID reviewId;         // 리뷰 ID
-    private UUID userId;           // 신고한 사용자 ID
+    private UUID reportedById;      // 신고한 사용자 ID
+    private UUID reportedUserId;    // 신고 당한 사용자 ID
     private Boolean isReported;    // 신고 여부
     private String reportMessage;  // 신고 메시지
 
-    public static ReportResponseDto from(Report report, UUID userId) {
+    public static ReportResponseDto from(Report report) {
         return ReportResponseDto.builder()
                 .reportId(report.getReportId())
                 .reviewId(report.getReview().getReviewId())
-                .userId(userId)
+                .reportedById(report.getReportedBy().getId())      // 신고한 사용자 ID
+                .reportedUserId(report.getReportedUser().getId())  // 신고 당한 사용자 ID
                 .isReported(report.getIsReported())
                 .reportMessage(report.getReportMessage())
                 .build();
