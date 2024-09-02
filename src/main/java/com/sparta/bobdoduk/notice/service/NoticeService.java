@@ -1,5 +1,6 @@
 package com.sparta.bobdoduk.notice.service;
 
+import com.sparta.bobdoduk.auth.domain.UserRoleEnum;
 import com.sparta.bobdoduk.auth.security.UserDetailsImpl;
 import com.sparta.bobdoduk.notice.domain.Notice;
 import com.sparta.bobdoduk.notice.dto.NoticeReqDto;
@@ -86,7 +87,7 @@ public class NoticeService {
     }
 
     private void checkAdminRole(UserDetailsImpl userDetails) {
-        if (!"master".equals(userDetails.getUser().getRole())) {
+        if (!UserRoleEnum.MASTER.getAuthority().equals(userDetails.getUser().getRole().getAuthority())) {
             throw new SecurityException("권한이 없습니다.");
         }
     }

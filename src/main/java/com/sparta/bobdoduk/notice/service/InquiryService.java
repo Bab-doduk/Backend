@@ -1,5 +1,6 @@
 package com.sparta.bobdoduk.notice.service;
 
+import com.sparta.bobdoduk.auth.domain.UserRoleEnum;
 import com.sparta.bobdoduk.auth.security.UserDetailsImpl;
 import com.sparta.bobdoduk.notice.domain.Inquiry;
 import com.sparta.bobdoduk.notice.dto.InquiryReqDto;
@@ -96,14 +97,14 @@ public class InquiryService {
 
     // 관리자 권한 확인 메서드
     private void checkAdminRole(UserDetailsImpl userDetails) {
-        if (!"master".equals(userDetails.getUser().getRole())) {
+        if (!UserRoleEnum.MASTER.getAuthority().equals(userDetails.getUser().getRole().getAuthority())) {
             throw new SecurityException("권한이 없습니다.");
         }
     }
 
     private InquiryResDto toDto(Inquiry inquiry) {
         return InquiryResDto.builder()
-                .noticeId(inquiry.getId())
+                .inquiryId(inquiry.getId())
                 .userId(inquiry.getUserId())
                 .title(inquiry.getTitle())
                 .content(inquiry.getContent())
