@@ -1,6 +1,8 @@
 package com.sparta.bobdoduk.notice.service;
 
 import com.sparta.bobdoduk.auth.security.UserDetailsImpl;
+import com.sparta.bobdoduk.global.exception.CustomException;
+import com.sparta.bobdoduk.global.exception.ErrorCode;
 import com.sparta.bobdoduk.notice.domain.Inquiry;
 import com.sparta.bobdoduk.notice.domain.Response;
 import com.sparta.bobdoduk.notice.dto.ResponseReqDto;
@@ -26,7 +28,7 @@ public class ResponseService {
     @Transactional
     public ResponseResDto createResponse(UserDetailsImpl userDetails, UUID inquiryId, ResponseReqDto responseReqDto) {
         Inquiry inquiry = inquiryRepository.findById(inquiryId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 문의가 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.INQUIRY_NOT_FOUND));
 
         Response response = Response.builder()
                 .id(UUID.randomUUID())
@@ -44,7 +46,7 @@ public class ResponseService {
     public List<ResponseResDto> getResponsesByInquiryId(UUID inquiryId) {
         List<Response> responses = responseRepository.findAllByInquiryId(inquiryId);
         if (responses.isEmpty()) {
-            throw new IllegalArgumentException("해당 문의에 대한 응답이 존재하지 않습니다.");
+            throw new CustomException(ErrorCode.INQUIRY_NOT_FOUND);
         }
         return responses.stream()
                 .map(this::toDto)
@@ -55,11 +57,11 @@ public class ResponseService {
     @Transactional
     public ResponseResDto updateResponse(UserDetailsImpl userDetails, UUID responseId, ResponseReqDto responseReqDto) {
         Response response = responseRepository.findById(responseId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 응답이 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.RESPONSE_NOT_FOUND));
 
         // 작성자 또는 관리자만 수정 가능
         if (!response.getUserId().equals(userDetails.getUser().getId()) && !"master".equals(userDetails.getUser().getRole())) {
-            throw new SecurityException("권한이 없습니다.");
+            throw new CustomException(ErrorCode.USER_MISMATCH);
         }
 
         response.setTitle(responseReqDto.getTitle());
@@ -73,11 +75,11 @@ public class ResponseService {
     @Transactional
     public void deleteResponse(UserDetailsImpl userDetails, UUID responseId) {
         Response response = responseRepository.findById(responseId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 응답이 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.RESPONSE_NOT_FOUND));
 
         // 작성자 또는 관리자만 삭제 가능
         if (!response.getUserId().equals(userDetails.getUser().getId()) && !"master".equals(userDetails.getUser().getRole())) {
-            throw new SecurityException("권한이 없습니다.");
+            throw new CustomException(ErrorCode.USER_MISMATCH);
         }
 
         responseRepository.delete(response);

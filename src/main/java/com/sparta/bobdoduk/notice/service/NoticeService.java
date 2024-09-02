@@ -2,6 +2,8 @@ package com.sparta.bobdoduk.notice.service;
 
 import com.sparta.bobdoduk.auth.domain.UserRoleEnum;
 import com.sparta.bobdoduk.auth.security.UserDetailsImpl;
+import com.sparta.bobdoduk.global.exception.CustomException;
+import com.sparta.bobdoduk.global.exception.ErrorCode;
 import com.sparta.bobdoduk.notice.domain.Notice;
 import com.sparta.bobdoduk.notice.dto.NoticeReqDto;
 import com.sparta.bobdoduk.notice.dto.NoticeResDto;
@@ -48,7 +50,7 @@ public class NoticeService {
     @Transactional(readOnly = true)
     public NoticeResDto getNoticeById(UUID noticeId) {
         Notice notice = noticeRepository.findById(noticeId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 공지사항이 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.NOTICE_NOT_FOUND));
         return toDto(notice);
     }
 
@@ -58,7 +60,7 @@ public class NoticeService {
         checkAdminRole(userDetails);
 
         Notice notice = noticeRepository.findById(noticeId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 공지사항이 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.NOTICE_NOT_FOUND));
 
         if (!notice.getUserId().equals(userDetails.getUser().getId())) {
             throw new SecurityException("사용자 정보가 일치하지 않습니다.");
@@ -77,10 +79,10 @@ public class NoticeService {
         checkAdminRole(userDetails);
 
         Notice notice = noticeRepository.findById(noticeId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 공지사항이 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.NOTICE_NOT_FOUND));
 
         if (!notice.getUserId().equals(userDetails.getUser().getId())) {
-            throw new SecurityException("사용자 정보가 일치하지 않습니다.");
+            throw new CustomException(ErrorCode.USER_MISMATCH);
         }
 
         noticeRepository.delete(notice);
@@ -88,11 +90,10 @@ public class NoticeService {
 
     private void checkAdminRole(UserDetailsImpl userDetails) {
         if (!UserRoleEnum.MASTER.getAuthority().equals(userDetails.getUser().getRole().getAuthority())) {
-            throw new SecurityException("권한이 없습니다.");
+            throw new CustomException(ErrorCode.USER_ROLE_MISMATCH);
         }
     }
 
-    // Notice 엔티티를 NoticeResDto로 변환하는 메서드
     private NoticeResDto toDto(Notice notice) {
         return NoticeResDto.builder()
                 .noticeId(notice.getId())

@@ -2,6 +2,8 @@ package com.sparta.bobdoduk.notice.service;
 
 import com.sparta.bobdoduk.auth.domain.UserRoleEnum;
 import com.sparta.bobdoduk.auth.security.UserDetailsImpl;
+import com.sparta.bobdoduk.global.exception.CustomException;
+import com.sparta.bobdoduk.global.exception.ErrorCode;
 import com.sparta.bobdoduk.notice.domain.Inquiry;
 import com.sparta.bobdoduk.notice.dto.InquiryReqDto;
 import com.sparta.bobdoduk.notice.dto.InquiryResDto;
@@ -56,10 +58,10 @@ public class InquiryService {
     @Transactional(readOnly = true)
     public InquiryResDto getInquiryById(UserDetailsImpl userDetails, UUID inquiryId) {
         Inquiry inquiry = inquiryRepository.findById(inquiryId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 문의가 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.INQUIRY_NOT_FOUND));
 
         if (!inquiry.getUserId().equals(userDetails.getUser().getId()) && !"master".equals(userDetails.getUser().getRole())) {
-            throw new SecurityException("사용자 정보가 일치하지 않습니다.");
+            throw new CustomException(ErrorCode.USER_MISMATCH);
         }
 
         return toDto(inquiry);
@@ -69,10 +71,10 @@ public class InquiryService {
     @Transactional
     public InquiryResDto updateInquiry(UserDetailsImpl userDetails, UUID inquiryId, InquiryReqDto inquiryReqDto) {
         Inquiry inquiry = inquiryRepository.findById(inquiryId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 문의가 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.INQUIRY_NOT_FOUND));
 
         if (!inquiry.getUserId().equals(userDetails.getUser().getId()) && !"master".equals(userDetails.getUser().getRole())) {
-            throw new SecurityException("사용자 정보가 일치하지 않습니다.");
+            throw new CustomException(ErrorCode.USER_MISMATCH);
         }
 
         inquiry.setTitle(inquiryReqDto.getTitle());
@@ -86,10 +88,10 @@ public class InquiryService {
     @Transactional
     public void deleteInquiry(UserDetailsImpl userDetails, UUID inquiryId) {
         Inquiry inquiry = inquiryRepository.findById(inquiryId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 문의가 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ErrorCode.INQUIRY_NOT_FOUND));
 
         if (!inquiry.getUserId().equals(userDetails.getUser().getId()) && !"master".equals(userDetails.getUser().getRole())) {
-            throw new SecurityException("사용자 정보가 일치하지 않습니다.");
+            throw new CustomException(ErrorCode.USER_MISMATCH);
         }
 
         inquiryRepository.delete(inquiry);
@@ -98,7 +100,7 @@ public class InquiryService {
     // 관리자 권한 확인 메서드
     private void checkAdminRole(UserDetailsImpl userDetails) {
         if (!UserRoleEnum.MASTER.getAuthority().equals(userDetails.getUser().getRole().getAuthority())) {
-            throw new SecurityException("권한이 없습니다.");
+            throw new CustomException(ErrorCode.USER_ROLE_MISMATCH);
         }
     }
 

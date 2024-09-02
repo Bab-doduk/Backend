@@ -23,13 +23,19 @@ public enum ErrorCode {
     OPTION_NOT_FOUND(HttpStatus.NOT_FOUND, "옵션을 찾을 수 없습니다."),
     ORDER_NOT_FOUND(HttpStatus.NOT_FOUND, "주문을 찾을 수 없습니다."),
 
+    NOTICE_NOT_FOUND(HttpStatus.NOT_FOUND, "공지사항을 찾을 수 없습니다."),
+    INQUIRY_NOT_FOUND(HttpStatus.NOT_FOUND, "문의를 찾을 수 없습니다."),
+
+    RESPONSE_NOT_FOUND(HttpStatus.NOT_FOUND, "응답을 찾을 수 없습니다."),
+
 
     // ------ 5xx ------
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버에 문제가 발생했습니다."),
 
 
     //인증, 권한
-    USER_MISMATCH(HttpStatus.FORBIDDEN, "사용자 정보가 일치하지 않습니다."),;
+    USER_MISMATCH(HttpStatus.FORBIDDEN, "사용자 정보가 일치하지 않습니다."),
+    USER_ROLE_MISMATCH(HttpStatus.FORBIDDEN, "사용자 권한이 일치하지 않습니다."),;
 
     private final HttpStatus status;
     private final String message;

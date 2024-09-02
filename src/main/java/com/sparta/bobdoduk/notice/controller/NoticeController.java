@@ -36,14 +36,14 @@ public class NoticeController {
     @GetMapping
     public ResponseEntity<ApiResponseDto<List<NoticeResDto>>> getAllNotices() {
         List<NoticeResDto> noticeResDtos = noticeService.getAllNotices();
-        return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "공지사항 조회 성공", noticeResDtos));
+        return ResponseEntity.ok().body(new ApiResponseDto<>(HttpStatus.OK, "공지사항 조회 성공", noticeResDtos));
     }
 
     // 공지사항 ID로 조회
     @GetMapping("/{noticeId}")
     public ResponseEntity<ApiResponseDto<NoticeResDto>> getNoticeById(@PathVariable UUID noticeId) {
         NoticeResDto noticeResDto = noticeService.getNoticeById(noticeId);
-        return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "공지사항 조회 성공", noticeResDto));
+        return ResponseEntity.ok().body(new ApiResponseDto<>(HttpStatus.OK, "공지사항 조회 성공", noticeResDto));
     }
 
     // 공지사항 수정
