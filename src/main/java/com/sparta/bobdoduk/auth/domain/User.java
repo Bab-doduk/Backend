@@ -1,21 +1,23 @@
 package com.sparta.bobdoduk.auth.domain;
 
-import com.sparta.bobdoduk.Auditing;
+import com.sparta.bobdoduk.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.Where;
 
 import java.util.UUID;
 
+@Where(clause = "deleted_at is null")
 @Entity
 @Data
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Table(name = "p_users")
-public class User extends Auditing {
+public class User extends BaseEntity {
     @Id
     private UUID id;
     @Column(nullable = false, unique = true)
