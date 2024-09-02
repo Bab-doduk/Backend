@@ -17,4 +17,8 @@ public interface ReportRepository extends JpaRepository<Report, UUID> {
 
     // 신고한 사용자 id로 검색
     Page<Report> findByReportedBy_Id(UUID reportedById, Pageable pageable);
+
+    // 신고 당한 사용자 id로 검색
+    Page<Report> findByReportedUser_Id(UUID reportedUserId, Pageable pageable);
+
 }

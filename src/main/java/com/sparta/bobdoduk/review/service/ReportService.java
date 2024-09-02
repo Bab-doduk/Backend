@@ -90,4 +90,10 @@ public class ReportService {
     public Page<Report> getReportsByReportedById(UUID reportedById, Pageable pageable) {
         return reportRepository.findByReportedBy_Id(reportedById, pageable);
     }
+
+    // 신고 당한 사용자 id로 검색
+    @Transactional(readOnly = true)
+    public Page<Report> getReportsByReportedUserId(UUID reportedUserId, Pageable pageable) {
+        return reportRepository.findByReportedUser_Id(reportedUserId, pageable);
+    }
 }

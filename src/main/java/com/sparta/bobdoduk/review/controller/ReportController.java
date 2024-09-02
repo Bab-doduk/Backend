@@ -80,7 +80,19 @@ public class ReportController {
     public ResponseEntity<ApiResponseDto<Page<ReportResponseDto>>> getReportsByReportedById(@RequestParam UUID reportedById, Pageable pageable) {
         Page<Report> reports = reportService.getReportsByReportedById(reportedById, pageable);
         Page<ReportResponseDto> reportDtos = reports.map(ReportResponseDto::from);
-        return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "리뷰 신고 목록 조회 성공", reportDtos));
+        return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "리뷰 신고 목록: 신고한 사용자", reportDtos));
+    }
+
+    /**
+     * 리뷰 신고 검색 (관리자)
+     * 신고 당한 사용자 ID로 검색
+     */
+    @GetMapping("/search/by-reported-user")
+    @PreAuthorize("hasRole('MASTER')")
+    public ResponseEntity<ApiResponseDto<Page<ReportResponseDto>>> getReportsByReportedUserId(@RequestParam UUID reportedUserId, Pageable pageable) {
+        Page<Report> reports = reportService.getReportsByReportedUserId(reportedUserId, pageable);
+        Page<ReportResponseDto> reportDtos = reports.map(ReportResponseDto::from);
+        return ResponseEntity.ok(new ApiResponseDto<>(HttpStatus.OK, "리뷰 신고 목록: 신고 당한 사용자", reportDtos));
     }
 
 
