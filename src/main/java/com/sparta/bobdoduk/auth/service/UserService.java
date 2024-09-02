@@ -9,6 +9,10 @@ import com.sparta.bobdoduk.auth.security.UserDetailsImpl;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -81,14 +85,22 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public List<UserAllResponseDto> searchUser(String query) {
+    public List<UserAllResponseDto> searchUser(String query, int page, int size) {
+
+        if (size != 30 && size != 50) {
+            size = 10;
+        }
+        // 기본설정
+        Sort.Direction direction = Sort.Direction.DESC;
+
+        Pageable pageable = PageRequest.of(page-1, size, Sort.by(direction, "createdAt", "updatedBy"));
         List<UserAllResponseDto> list = new ArrayList<>();
-        List<User> users = switch (query) {
-            case "OWNER" -> userRepository.findAllByRole(UserRoleEnum.OWNER);
-            case "MANAGER" -> userRepository.findAllByRole(UserRoleEnum.MANAGER);
-            case "MASTER" -> userRepository.findAllByRole(UserRoleEnum.MASTER);
-            case "CUSTOMER" -> userRepository.findAllByRole(UserRoleEnum.CUSTOMER);
-            default -> userRepository.findAllByUsernameContaining(query);
+        Page<User> users = switch (query) {
+            case "OWNER" -> userRepository.findAllByRole(UserRoleEnum.OWNER, pageable);
+            case "MANAGER" -> userRepository.findAllByRole(UserRoleEnum.MANAGER, pageable);
+            case "MASTER" -> userRepository.findAllByRole(UserRoleEnum.MASTER, pageable);
+            case "CUSTOMER" -> userRepository.findAllByRole(UserRoleEnum.CUSTOMER, pageable);
+            default -> userRepository.findAllByUsernameContaining(query, pageable);
         };
 
         for (User user : users) {
