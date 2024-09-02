@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -30,9 +31,9 @@ public class ResponseController {
 
     // 특정 문의의 응답 조회
     @GetMapping("/{inquiryId}")
-    public ResponseEntity<ResponseResDto> getResponseByInquiryId(@PathVariable UUID inquiryId) {
-        ResponseResDto response = responseService.getResponseByInquiryId(inquiryId);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<List<ResponseResDto>> getResponseByInquiryId(@PathVariable UUID inquiryId) {
+        List<ResponseResDto> responses = responseService.getResponsesByInquiryId(inquiryId);
+        return ResponseEntity.ok(responses);
     }
 
     // 응답 수정

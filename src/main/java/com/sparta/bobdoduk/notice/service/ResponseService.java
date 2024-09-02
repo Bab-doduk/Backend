@@ -11,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,12 +40,15 @@ public class ResponseService {
         return toDto(response);
     }
 
-    // 특정 문의에 대한 응답 조회
     @Transactional(readOnly = true)
-    public ResponseResDto getResponseByInquiryId(UUID inquiryId) {
-        Response response = responseRepository.findByInquiryId(inquiryId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 문의에 대한 응답이 존재하지 않습니다."));
-        return toDto(response);
+    public List<ResponseResDto> getResponsesByInquiryId(UUID inquiryId) {
+        List<Response> responses = responseRepository.findAllByInquiryId(inquiryId);
+        if (responses.isEmpty()) {
+            throw new IllegalArgumentException("해당 문의에 대한 응답이 존재하지 않습니다.");
+        }
+        return responses.stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
     // 응답 수정
