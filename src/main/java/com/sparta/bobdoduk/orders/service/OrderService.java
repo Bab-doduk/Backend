@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -166,6 +168,14 @@ public class OrderService {
 
         if(!order.getUserId().equals(userId)) {
             throw new CustomException(ErrorCode.USER_MISMATCH);
+        }
+
+        // 주문 생성 시간이 5분을 초과했는지 체크
+        LocalDateTime now = LocalDateTime.now();
+        Duration duration = Duration.between(order.getCreatedAt(), now);
+
+        if (duration.toMinutes() > 5) {
+            throw new CustomException(ErrorCode.ORDER_CANNOT_BE_CANCELLED);
         }
 
         orderRepository.deleteById(orderId);
