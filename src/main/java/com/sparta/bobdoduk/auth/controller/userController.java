@@ -47,4 +47,10 @@ public class userController {
         userService.deleteUserInfo(userDetails);
         return ResponseEntity.ok("Delete user " + userDetails.getUsername());
     }
+
+    @GetMapping("/search")
+    @PreAuthorize("hasRole('MASTER') or hasRole('MANAGER')")
+    public ResponseEntity<List<UserService.UserAllResponseDto>> searchUsers(@RequestParam String query) {
+        return ResponseEntity.ok(userService.searchUser(query));
+    }
 }
