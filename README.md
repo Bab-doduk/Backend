@@ -9,7 +9,7 @@
 5. 아키텍쳐 구조
 6. 테이블 명세서 및 ERD
 7. API 명세서
-9. 프로젝트 기록 및 트러블슈팅
+9. 프로젝트 기록
 
 ## 프로젝트 소개
 - 프로젝트 기간 :
@@ -19,6 +19,13 @@
   - <img src="https://img.shields.io/badge/Framework-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"><img src="https://img.shields.io/badge/3.3.3-515151?style=for-the-badge">
   - <img src="https://img.shields.io/badge/Build-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=Gradle&logoColor=white">
   - <img src="https://img.shields.io/badge/Language-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/java-%23ED8B00?style=for-the-badge&logo=openjdk&logoColor=white"><img src="https://img.shields.io/badge/17-515151?style=for-the-badge">
+
+- 팀원 역할 분배
+
+| **Backend** | [이경진](https://github.com/kyungjinleelee)                         | [이성원](https://github.com/lsw71311)                       | [김수봉](https://github.com/bongbongbon)               | [송기찬](https://github.com/gichan-song)                        |
+|-------------|------------------------------------|----------------------------------|--------------------------|-----------------------------------|
+| **도메인**  | 가게 도메인, 결제 도메인, 리뷰 및 평점, 신고 도메인           | 주문 도메인, 공지사항 및 고객센터 도메인 | 상품 도메인, 배포          | 인증/인가 도메인, 유저 도메인      |
+
 
 ## 기술 스택
 <div align=center> 
@@ -71,7 +78,7 @@
 
 
 ## 프로젝트 실행 방법
-- 프로젝트 클론 및 docker 설치 후 로컬 환경에서 순차적으로 실행
+- 프로젝트 클론 및 `docker` 설치 후 로컬 환경에서 순차적으로 실행
 1. 프로젝트 클론
 
    ```
@@ -135,4 +142,3 @@
 ## 프로젝트 기록 ✏️
 - 프로젝트 설계 SA [[블로그 이동]](https://developer-jinnie.tistory.com/87)
 
-## 팀원 역할 분배
