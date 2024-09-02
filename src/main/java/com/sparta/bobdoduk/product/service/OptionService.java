@@ -1,5 +1,6 @@
 package com.sparta.bobdoduk.product.service;
 
+import com.sparta.bobdoduk.auth.security.UserDetailsImpl;
 import com.sparta.bobdoduk.global.exception.CustomException;
 import com.sparta.bobdoduk.global.exception.ErrorCode;
 import com.sparta.bobdoduk.product.domain.Option;
@@ -26,7 +27,7 @@ public class OptionService {
 
     // 옵션 생성
     @Transactional
-    public OptionResponseDTO createOption(OptionRequestDTO requestDTO) {
+    public OptionResponseDTO createOption(OptionRequestDTO requestDTO, UserDetailsImpl userDetails) {
 
         UUID option_id = UUID.randomUUID();
 
@@ -39,6 +40,7 @@ public class OptionService {
                 .image(requestDTO.getImage())
                 .createUserId(requestDTO.getCreateUserId())
                 .storeId(requestDTO.getStoreId())
+                .createUserId(userDetails.getUser().getId())
                 .build();
 
         return OptionResponseDTO.fromEntity(optionRepository.save(option));
@@ -60,7 +62,8 @@ public class OptionService {
 
     // 옵션 수정
     @Transactional
-    public OptionResponseDTO updateOption(UUID optionId, OptionRequestDTO requestDTO) {
+    public OptionResponseDTO updateOption(UserDetailsImpl userDetails, UUID optionId, OptionRequestDTO requestDTO) {
+        
 
         Option option = findByOptionId(optionId);
 
@@ -69,7 +72,7 @@ public class OptionService {
         option.setPrice(requestDTO.getPrice());
         option.setProductStatus(requestDTO.getProductStatus());
         option.setImage(requestDTO.getImage());
-        option.setCreateUserId(requestDTO.getCreateUserId());
+        option.setCreateUserId(userDetails.getUser().getId());
         option.setStoreId(requestDTO.getStoreId());
 
         return OptionResponseDTO.fromEntity(option);

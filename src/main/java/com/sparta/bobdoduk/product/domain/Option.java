@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,5 +36,5 @@ public class Option extends BaseEntity {
     private UUID storeId;
 
     @OneToMany(mappedBy = "option", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductOption> productOptions;
+    private List<ProductOption> productOptions = new ArrayList<>();
 }

@@ -1,5 +1,8 @@
 package com.sparta.bobdoduk.store.service;
 
+import com.sparta.bobdoduk.auth.domain.User;
+import com.sparta.bobdoduk.auth.domain.UserRoleEnum;
+import com.sparta.bobdoduk.auth.repository.UserRepository;
 import com.sparta.bobdoduk.global.exception.CustomException;
 import com.sparta.bobdoduk.global.exception.ErrorCode;
 import com.sparta.bobdoduk.store.domain.AreaCategory;
@@ -28,6 +31,7 @@ import java.util.UUID;
 public class StoreService {
 
     private final StoreRepository storeRepository;
+    private final UserRepository userRepository;
     private final FoodCategoryRepository foodCategoryRepository;
     private final AreaCategoryRepository areaCategoryRepository;
 
@@ -56,13 +60,16 @@ public class StoreService {
                 .description(store.getDescription())
                 .address(store.getAddress())
                 .phoneNumber(store.getPhoneNumber())
-                .ownerId(store.getOwnerId())
+                .ownerId(store.getOwner().getId())
                 .build();
     }
 
     // 가게 등록
     @Transactional
-    public UUID createStore(StoreCreateReqDto request) {
+    public UUID createStore(StoreCreateReqDto request, UUID ownerId) {
+        User owner = userRepository.findById(ownerId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
         Store store = Store.builder()
                 .name(request.getName())
                 .foodCategory(foodCategoryRepository.findFoodCategoryById(request.getFoodCategoryId()))
@@ -70,7 +77,7 @@ public class StoreService {
                 .description(request.getDescription())
                 .address(request.getAddress())
                 .phoneNumber(request.getPhoneNumber())
-                .ownerId(request.getOwnerId())
+                .owner(owner)
                 .build();
 
         Store savedStore = storeRepository.save(store);
@@ -79,9 +86,14 @@ public class StoreService {
 
     // 가게 수정
     @Transactional
-    public void updateStore(UUID storeId, StoreUpdateRequestDto request) {
+    public void updateStore(UUID storeId, StoreUpdateRequestDto request, UUID userId, UserRoleEnum role) {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new CustomException(ErrorCode.STORE_NOT_FOUND));
+
+        // OWNER 사용자는 자신의 가게만 수정 가능
+        if (role == UserRoleEnum.OWNER && !store.getOwner().getId().equals(userId)) {
+            throw new CustomException(ErrorCode.STORE_UPDATE_UNAUTHORIZED);
+        }
 
         FoodCategory foodCategory = foodCategoryRepository.findFoodCategoryById(request.getFoodCategoryId());
         AreaCategory areaCategory = areaCategoryRepository.findAreaCategoryById(request.getAreaCategoryId());
@@ -98,10 +110,14 @@ public class StoreService {
 
     // 가게 삭제
     @Transactional
-    public void deleteStore(UUID storeId) {
+    public void deleteStore(UUID storeId, UUID userId, UserRoleEnum role) {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new CustomException(ErrorCode.STORE_NOT_FOUND));
 
+        // OWNER 사용자는 자신의 가게만 삭제 가능
+        if (role == UserRoleEnum.OWNER && !store.getOwner().getId().equals(userId)) {
+            throw new CustomException(ErrorCode.STORE_DELETE_UNAUTHORIZED);
+        }
         storeRepository.delete(store);
     }
 

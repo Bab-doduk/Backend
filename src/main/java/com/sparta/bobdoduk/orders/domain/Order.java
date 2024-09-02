@@ -1,6 +1,7 @@
 package com.sparta.bobdoduk.orders.domain;
 
 import com.sparta.bobdoduk.orders.dto.OrderReqDto;
+import com.sparta.bobdoduk.payment.domain.Payment;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -36,16 +37,19 @@ public class Order {
     private Double totalPrice;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Payment> payments;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderProduct> orderProducts;
 
-    public Order(OrderReqDto orderReqDto) {
-        this.userId = orderReqDto.getUserId();
-        this.storeId = orderReqDto.getStoreId();
-        this.orderStatus = orderReqDto.getOrderStatus();
-        this.orderType = orderReqDto.getOrderType();
-        this.totalPrice = orderReqDto.getOrderProducts().stream()
-                .mapToDouble(orderProductDto -> orderProductDto.getPrice() * orderProductDto.getQuantity())
-                .sum();
-    }
+//    public Order(OrderReqDto orderReqDto) {
+//        this.userId = orderReqDto.getUserId();
+//        this.storeId = orderReqDto.getStoreId();
+//        this.orderStatus = orderReqDto.getOrderStatus();
+//        this.orderType = orderReqDto.getOrderType();
+//        this.totalPrice = orderReqDto.getOrderProducts().stream()
+//                .mapToDouble(orderProductDto -> orderProductDto.getPrice() * orderProductDto.getQuantity())
+//                .sum();
+//    }
 
 }

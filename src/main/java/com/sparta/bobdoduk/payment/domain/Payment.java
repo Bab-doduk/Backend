@@ -1,6 +1,10 @@
 package com.sparta.bobdoduk.payment.domain;
 
 import com.sparta.bobdoduk.auth.domain.User;
+import com.sparta.bobdoduk.global.entity.BaseEntity;
+import com.sparta.bobdoduk.global.exception.CustomException;
+import com.sparta.bobdoduk.global.exception.ErrorCode;
+import com.sparta.bobdoduk.orders.domain.Order;
 import com.sparta.bobdoduk.store.domain.Store;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -14,14 +18,15 @@ import java.math.BigDecimal;
 @Table(name = "p_payments")
 @Getter
 @NoArgsConstructor
-public class Payment {
+public class Payment extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID paymentId;
 
-    @Column(nullable = false)
-    private UUID orderId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -32,7 +37,7 @@ public class Payment {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private PaymentStatus status;
+    private PaymentStatus status = PaymentStatus.PENDING; // 기본값 설정
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -43,11 +48,11 @@ public class Payment {
     private Store store;
 
     @Builder
-    public Payment(UUID orderId, PaymentMethod paymentMethod, BigDecimal price, PaymentStatus status, User user, Store store) {
-        this.orderId = orderId;
+    public Payment(Order order, PaymentMethod paymentMethod, BigDecimal price, PaymentStatus status, User user, Store store) {
+        this.order = order;
         this.paymentMethod = paymentMethod;
         this.price = price;
-        this.status = status;
+        this.status = status != null ? status : PaymentStatus.PENDING;
         this.user = user;
         this.store = store;
     }
@@ -56,4 +61,13 @@ public class Payment {
         return this.user.getId();
     }
 
+    public UUID getOrderId() { return this.order.getOrderId();}
+
+    // 결제 상태 취소
+    public void cancel() {
+        if (this.status == PaymentStatus.CANCELLED) {
+            throw new CustomException(ErrorCode.PAYMENT_ALREADY_CANCELLED);
+        }
+        this.status = PaymentStatus.CANCELLED;
+    }
 }
