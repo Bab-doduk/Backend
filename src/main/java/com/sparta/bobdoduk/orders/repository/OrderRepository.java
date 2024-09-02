@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface OrderRepository extends JpaRepository<Order, UUID> {
@@ -19,4 +20,7 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
     List<Order> findByTotalPrice(Double totalPrice);
 
     Page<Order> findByUserId(UUID id, Pageable pageable);
+
+    // 특정 유저가 특정 가게에서 완료한 주문 찾기
+    Optional<Order> findByUserIdAndStoreIdAndOrderStatus(UUID userId, UUID storeId, OrderStatus orderStatus);
 }
