@@ -50,7 +50,11 @@ public class userController {
 
     @GetMapping("/search")
     @PreAuthorize("hasRole('MASTER') or hasRole('MANAGER')")
-    public ResponseEntity<List<UserService.UserAllResponseDto>> searchUsers(@RequestParam String query) {
-        return ResponseEntity.ok(userService.searchUser(query));
+    public ResponseEntity<List<UserService.UserAllResponseDto>> searchUsers(@RequestParam String query,
+                                                                            @RequestParam(required = false,
+                                                                            defaultValue = "1") int page,
+                                                                            @RequestParam(required = false,
+                                                                            defaultValue = "10") int size) {
+        return ResponseEntity.ok(userService.searchUser(query, page, size));
     }
 }
