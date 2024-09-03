@@ -1,6 +1,8 @@
 package com.sparta.bobdoduk.product.domain;
 
+import com.sparta.bobdoduk.auth.domain.User;
 import com.sparta.bobdoduk.global.entity.BaseEntity;
+import com.sparta.bobdoduk.store.domain.Store;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -31,9 +33,13 @@ public class Option extends BaseEntity {
 
     private String image;
 
-    private UUID createUserId;
+    @ManyToOne
+    @JoinColumn(name = "owner_id", nullable = false)
+    private User owner;
 
-    private UUID storeId;
+    @ManyToOne
+    @JoinColumn(name = "store_id", nullable = false)
+    private Store store;
 
     @OneToMany(mappedBy = "option", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductOption> productOptions = new ArrayList<>();

@@ -46,8 +46,8 @@ public class ProductResponseDTO implements Serializable {
                 .price(product.getPrice())
                 .productStatus(product.getProductStatus())
                 .image(product.getImage())
-                .createUserId(product.getCreateUserId())
-                .storeId(product.getStoreId())
+                .createUserId(product.getOwner().getId())
+                .storeId(product.getStore().getStoreId())
                 .productOptions(ProductOptionResponseDTO.fromEntityList(
                         product.getProductOptions() != null ? product.getProductOptions() : new ArrayList<>()
                 ))

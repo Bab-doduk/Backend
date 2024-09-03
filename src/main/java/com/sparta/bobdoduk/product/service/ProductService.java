@@ -13,6 +13,8 @@ import com.sparta.bobdoduk.product.dto.request.ProductSearchRequestDTO;
 import com.sparta.bobdoduk.product.repository.OptionRepository;
 import com.sparta.bobdoduk.product.repository.ProductOptionRepository;
 import com.sparta.bobdoduk.product.repository.ProductRepository;
+import com.sparta.bobdoduk.store.domain.Store;
+import com.sparta.bobdoduk.store.repository.StoreRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -32,12 +34,17 @@ public class ProductService {
     private final OptionRepository optionRepository;
     private final OptionService optionService;
     private final ProductOptionRepository productOptionRepository;
+    private final StoreRepository storeRepository;
+
 
     // 상품 생성
     @Transactional
     public ProductResponseDTO createProduct(UserDetailsImpl userDetails, ProductRequestDTO requestDTO) {
 
         UUID product_id = UUID.randomUUID();
+
+        Store store = storeRepository.findById(requestDTO.getStoreId())
+                .orElseThrow(() -> new CustomException(ErrorCode.STORE_NOT_FOUND));
 
         Product product = Product.builder()
                 .id(product_id)
@@ -46,8 +53,8 @@ public class ProductService {
                 .price(requestDTO.getPrice())
                 .productStatus(requestDTO.getProductStatus())
                 .image(requestDTO.getImage())
-                .createUserId(userDetails.getUser().getId())
-                .storeId(requestDTO.getStoreId())
+                .owner(userDetails.getUser())
+                .store(store)
                 .build();
 
         return ProductResponseDTO.fromEntity(productRepository.save(product));
@@ -77,8 +84,6 @@ public class ProductService {
         product.setPrice(requestDTO.getPrice());
         product.setProductStatus(requestDTO.getProductStatus());
         product.setImage(requestDTO.getImage());
-        product.setCreateUserId(userDetails.getUser().getId());
-        product.setStoreId(requestDTO.getStoreId());
 
         return ProductResponseDTO.fromEntity(product);
     }

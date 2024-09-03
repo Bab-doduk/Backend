@@ -10,7 +10,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update                                  # Hibernate? DDL ?? ???? ?? (create, update, validate, none ? ??)
+      ddl-auto: update # Hibernate? DDL ?? ???? ?? (create, update, validate, none ? ??)
       dialect: org.hibernate.dialect.PostgreSQLDialect  # PostgreSQL Dialect ?? ??
     show-sql: true                                      # SQL ??? ??? ?? (??? ??)
 

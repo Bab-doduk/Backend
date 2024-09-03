@@ -40,8 +40,8 @@ public class OptionResponseDTO {
                 .price(option.getPrice())
                 .productStatus(option.getProductStatus())
                 .image(option.getImage())
-                .createUserId(option.getCreateUserId())
-                .storeId(option.getStoreId())
+                .createUserId(option.getOwner().getId())
+                .storeId(option.getStore().getStoreId())
                 .build();
     }
 

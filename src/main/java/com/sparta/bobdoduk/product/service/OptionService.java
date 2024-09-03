@@ -8,6 +8,8 @@ import com.sparta.bobdoduk.product.dto.request.OptionRequestDTO;
 import com.sparta.bobdoduk.product.dto.request.OptionSearchRequestDTO;
 import com.sparta.bobdoduk.product.dto.response.OptionResponseDTO;
 import com.sparta.bobdoduk.product.repository.OptionRepository;
+import com.sparta.bobdoduk.store.domain.Store;
+import com.sparta.bobdoduk.store.repository.StoreRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,10 +26,14 @@ import java.util.UUID;
 public class OptionService {
 
     private final OptionRepository optionRepository;
+    private final StoreRepository storeRepository;
 
     // 옵션 생성
     @Transactional
     public OptionResponseDTO createOption(OptionRequestDTO requestDTO, UserDetailsImpl userDetails) {
+
+        Store store = storeRepository.findById(requestDTO.getStoreId())
+                .orElseThrow(() -> new CustomException(ErrorCode.STORE_NOT_FOUND));
 
         UUID option_id = UUID.randomUUID();
 
@@ -38,9 +44,8 @@ public class OptionService {
                 .price(requestDTO.getPrice())
                 .productStatus(requestDTO.getProductStatus())
                 .image(requestDTO.getImage())
-                .createUserId(requestDTO.getCreateUserId())
-                .storeId(requestDTO.getStoreId())
-                .createUserId(userDetails.getUser().getId())
+                .owner(userDetails.getUser())
+                .store(store)
                 .build();
 
         return OptionResponseDTO.fromEntity(optionRepository.save(option));
@@ -72,8 +77,7 @@ public class OptionService {
         option.setPrice(requestDTO.getPrice());
         option.setProductStatus(requestDTO.getProductStatus());
         option.setImage(requestDTO.getImage());
-        option.setCreateUserId(userDetails.getUser().getId());
-        option.setStoreId(requestDTO.getStoreId());
+
 
         return OptionResponseDTO.fromEntity(option);
     }
