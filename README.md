@@ -106,26 +106,27 @@
         name: Bob-doduk
 
     datasource:
-    url: 
-    username: 
-    password: 
-    driver-class-name: 
+    url: jdbc:postgresql://${host}:${port}/${database}
+    username: ${username}
+    password: ${password}
+    driver-class-name: org.postgresql.Driver
 
     jpa:
       hibernate:
-        ddl-auto:                                   
-        dialect: 
-      show-sql:                                    
+        ddl-auto: update                                
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+      show-sql: true                                  
 
     sql:
       init:
-        mode:                                       
+        mode: always                            
     jwt:
       secret:
-        key: 
+        key: ${secretKey}
   
    
 4. 애플리케이션 실행
+5. Postman 등의 API 테스트 도구를 사용하여 API 테스트
 <br>
 
 ## 아키텍쳐 구조
