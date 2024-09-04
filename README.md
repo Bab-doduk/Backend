@@ -134,17 +134,17 @@
 
 
 ## API 명세서 
-- [[삽입예정...]()
+- [[👉API 명세서 보러가기]](https://documenter.getpostman.com/view/32625814/2sAXjNYqzZ)
 <br>
 
 
 ## 테이블 명세서 및 ERD 
-- [[테이블 명세서 보러가기]](https://www.notion.so/teamsparta/9800a5471fda430184fc312cfb223518)
+- [[👉테이블 명세서 보러가기]](https://www.notion.so/teamsparta/9800a5471fda430184fc312cfb223518)
 - **ERD**
 ![image](https://github.com/user-attachments/assets/f7665dbe-5fab-4191-b8d0-61784279aadb)
 
 
 
 ## 프로젝트 기록 
-- 프로젝트 설계 SA [[블로그 이동]](https://developer-jinnie.tistory.com/87)
+- 프로젝트 설계 SA [[✏️블로그 이동]](https://developer-jinnie.tistory.com/87)
 
